@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>귀멸의 칼날: 귀살대 키우기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Sans+KR:wght@400;700&display=swap');
+      
+      body {
+        font-family: 'Noto Sans KR', sans-serif;
+        background-color: #020617;
+        color: #e2e8f0;
+        margin: 0;
+        overflow: hidden; /* Prevent body scroll, handle in app */
+      }
+      .font-cinzel {
+        font-family: 'Cinzel', serif;
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: #1e293b; 
+        border-radius: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #475569; 
+        border-radius: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #64748b; 
+      }
+      
+      @keyframes bounce-up {
+          0% { transform: translateY(20px) scale(0.8); opacity: 0; }
+          20% { transform: translateY(0) scale(1.1); opacity: 1; }
+          80% { transform: translateY(-20px) scale(1); opacity: 1; }
+          100% { transform: translateY(-50px) scale(0.9); opacity: 0; }
+      }
+      .animate-bounce-up {
+          animation: bounce-up 1.5s ease-out forwards;
+      }
+    </style>
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.292.0?external=react",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/"
+  }
+}
+</script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+      import React, { useState, useEffect, useRef } from 'react';
+      import { createRoot } from 'react-dom/client';
+      import { Swords, Home, ShoppingBag, Heart, Skull, Zap, ChevronRight, CheckCircle2, Circle, Settings, Users, ShieldAlert, Sparkles, Flame } from 'lucide-react';
+
+      // --- TYPES ---
+      
+      const BreathingStyle = {
+        WATER: '물의 호흡',
+        THUNDER: '번개의 호흡',
+        BEAST: '짐승의 호흡',
+        FLAME: '화염의 호흡',
+        MIST: '안개의 호흡',
+        INSECT: '벌레의 호흡',
+        STONE: '바위의 호흡',
+        WIND: '바람의 호흡',
+        SOUND: '소리의 호흡',
+        LOVE: '사랑의 호흡',
+        SERPENT: '뱀의 호흡',
+        SUN: '해의 호흡',
+        MOON: '달의 호흡',
+        FLOWER: '꽃의 호흡',
+        NONE: '호흡 없음 (특수)'
+      };
+
+      // --- CONSTANTS ---
+
+      const SLAYERS_DATA = [
+        {
+          id: 'tanjiro',
+          name: '카마도 탄지로',
+          title: '계급: 병',
+          style: BreathingStyle.SUN,
+          baseHp: 180,
+          baseAtk: 45,
+          price: 0,
+          description: '후각이 뛰어나며, 전설의 호흡을 계승한 소년.',
+          skill: {
+            name: '히노카미 카구라: 원무',
+            damageMultiplier: 4.5,
+            cooldown: 6,
+            description: '호흡을 불꽃으로 바꾸어 강력한 베기를 날린다.',
+            isUltimate: true
+          },
+          awakenSkill: {
+            name: '히노카미 카구라: 비륜양염',
+            damageMultiplier: 7.0,
+            cooldown: 12,
+            description: '칼날이 아지랑이처럼 흔들리며 베어낸다.',
+            isUltimate: true
+          },
+          color: 'bg-emerald-600'
+        },
+        {
+          id: 'zenitsu',
+          name: '아가츠마 젠이츠',
+          title: '계급: 병',
+          style: BreathingStyle.THUNDER,
+          baseHp: 135,
+          baseAtk: 70,
+          price: 300,
+          description: '극도의 공포 속에서 잠들면 진정한 힘을 발휘한다.',
+          skill: {
+            name: '벽력일섬: 육연',
+            damageMultiplier: 3.5,
+            cooldown: 4,
+            description: '보이지 않는 속도로 적을 6번 벤다.'
+          },
+          awakenSkill: {
+            name: '벽력일섬: 신속',
+            damageMultiplier: 6.0,
+            cooldown: 10,
+            description: '한계 속도를 넘어선 일격.'
+          },
+          color: 'bg-yellow-500'
+        },
+        {
+          id: 'inosuke',
+          name: '하시비라 이노스케',
+          title: '계급: 병',
+          style: BreathingStyle.BEAST,
+          baseHp: 225,
+          baseAtk: 35,
+          price: 400,
+          description: '저돌적인 야생의 전사.',
+          skill: {
+            name: '제3의 이빨: 뜯어 발기기',
+            damageMultiplier: 3.0,
+            cooldown: 4,
+            description: '쌍검으로 적의 목을 노린다.'
+          },
+          awakenSkill: {
+            name: '제9의 이빨: 신・으스름 베기',
+            damageMultiplier: 5.5,
+            cooldown: 9,
+            description: '관절을 빼서 리치를 늘려 공격한다.'
+          },
+          color: 'bg-blue-400'
+        },
+        {
+          id: 'genya',
+          name: '시나즈가와 겐야',
+          title: '계급: 병',
+          style: BreathingStyle.NONE,
+          baseHp: 270,
+          baseAtk: 55,
+          price: 800,
+          description: '호흡을 쓸 수 없어 총과 혈귀 먹기를 사용한다.',
+          skill: {
+            name: '남만총 사격',
+            damageMultiplier: 2.8,
+            cooldown: 3,
+            description: '총으로 견제하고 물어뜯어 회복한다.'
+          },
+          awakenSkill: {
+            name: '혈귀술: 무간업수',
+            damageMultiplier: 5.0,
+            cooldown: 10,
+            description: '혈귀를 먹고 얻은 힘으로 나무 뿌리를 조종한다.'
+          },
+          color: 'bg-slate-600'
+        },
+        {
+          id: 'nezuko',
+          name: '카마도 네즈코',
+          title: '혈귀',
+          style: BreathingStyle.NONE,
+          baseHp: 250,
+          baseAtk: 55,
+          price: 1500,
+          description: '탄지로의 여동생. 혈귀술을 사용한다.',
+          skill: {
+            name: '혈귀술: 폭혈',
+            damageMultiplier: 4.0,
+            cooldown: 5,
+            description: '자신의 피를 불태워 적을 공격한다.'
+          },
+          awakenSkill: {
+            name: '각성: 오니화',
+            damageMultiplier: 6.5,
+            cooldown: 15,
+            description: '성인 형상으로 변하여 무자비하게 공격한다.'
+          },
+          color: 'bg-rose-500'
+        },
+        {
+          id: 'kanao',
+          name: '츠유리 카나오',
+          title: '계급: 병',
+          style: BreathingStyle.FLOWER,
+          baseHp: 195,
+          baseAtk: 60,
+          price: 1200,
+          description: '뛰어난 동체시력을 가진 츠구코.',
+          skill: {
+            name: '제4형: 홍화의',
+            damageMultiplier: 3.5,
+            cooldown: 5,
+            description: '부드러운 곡선을 그리며 베어낸다.'
+          },
+          awakenSkill: {
+            name: '종의 형: 피안주안',
+            damageMultiplier: 7.5,
+            cooldown: 15,
+            description: '실명할 위험을 감수하고 모든 움직임을 꿰뚫어본다.'
+          },
+          color: 'bg-pink-400'
+        },
+        {
+          id: 'sabito',
+          name: '사비토',
+          title: '육성자 제자',
+          style: BreathingStyle.WATER,
+          baseHp: 210,
+          baseAtk: 63,
+          price: 1300,
+          description: '탄지로를 지도해준 여우 가면의 소년.',
+          skill: {
+            name: '제8형: 용소',
+            damageMultiplier: 3.0,
+            cooldown: 4,
+            description: '높은 곳에서 떨어지며 강력하게 벤다.'
+          },
+          awakenSkill: {
+            name: '제10형: 생생유전',
+            damageMultiplier: 5.5,
+            cooldown: 8,
+            description: '회전할수록 강해지는 물의 참격.'
+          },
+          color: 'bg-orange-300'
+        },
+        {
+          id: 'shinobu',
+          name: '코쵸우 시노부',
+          title: '충주',
+          style: BreathingStyle.INSECT,
+          baseHp: 150,
+          baseAtk: 45,
+          price: 1800,
+          description: '독을 사용하여 오니를 멸살한다.',
+          skill: {
+            name: '나비의 춤: 장난',
+            damageMultiplier: 2.5,
+            cooldown: 3,
+            description: '빠르게 찌르며 치명적인 독을 주입한다.'
+          },
+          awakenSkill: {
+            name: '지네의 춤: 백족 쟈바라',
+            damageMultiplier: 6.0,
+            cooldown: 9,
+            description: '엄청난 속도로 사방에서 찌른다.'
+          },
+          color: 'bg-purple-600'
+        },
+        {
+          id: 'giyu',
+          name: '토미오카 기유',
+          title: '수주',
+          style: BreathingStyle.WATER,
+          baseHp: 300,
+          baseAtk: 85,
+          price: 2200,
+          description: '냉철하고 침착한 물의 지주.',
+          skill: {
+            name: '제11형: 잔잔한 물결',
+            damageMultiplier: 3.5,
+            cooldown: 5,
+            description: '모든 공격을 무효화하고 반격한다.'
+          },
+          awakenSkill: {
+            name: '제10형: 생생유전 (극)',
+            damageMultiplier: 6.5,
+            cooldown: 10,
+            description: '극한까지 회전력을 높인 용의 일격.'
+          },
+          color: 'bg-blue-800'
+        },
+        {
+          id: 'mitsuri',
+          name: '칸로지 미츠리',
+          title: '연주',
+          style: BreathingStyle.LOVE,
+          baseHp: 300,
+          baseAtk: 90,
+          price: 2500,
+          description: '특이 체질 근육을 가진 사랑의 지주.',
+          skill: {
+            name: '제5형: 흔들리는 연정',
+            damageMultiplier: 4.0,
+            cooldown: 6,
+            description: '채찍 같은 검으로 광범위하게 공격한다.'
+          },
+          awakenSkill: {
+            name: '제6형: 고양이 발 사랑 바람',
+            damageMultiplier: 6.8,
+            cooldown: 11,
+            description: '빠르게 몸을 회전하며 모든 공격을 쳐낸다.'
+          },
+          color: 'bg-pink-500'
+        },
+        {
+          id: 'obanai',
+          name: '이구로 오바나이',
+          title: '사주',
+          style: BreathingStyle.SERPENT,
+          baseHp: 220,
+          baseAtk: 95,
+          price: 2600,
+          description: '뱀처럼 휘어지는 검로를 구사하는 지주.',
+          skill: {
+            name: '제2형: 협두의 독니',
+            damageMultiplier: 3.8,
+            cooldown: 5,
+            description: '뱀이 기어가듯 적의 뒤를 노린다.'
+          },
+          awakenSkill: {
+            name: '제5형: 원원장사',
+            damageMultiplier: 7.2,
+            cooldown: 12,
+            description: '광범위하게 뱀처럼 휘어지는 참격을 날린다.'
+          },
+          color: 'bg-violet-800'
+        },
+        {
+          id: 'tengen',
+          name: '우즈이 텐겐',
+          title: '음주',
+          style: BreathingStyle.SOUND,
+          baseHp: 360,
+          baseAtk: 98,
+          price: 2800,
+          description: '화려함을 추구하는 닌자 출신 지주.',
+          skill: {
+            name: '제5형: 명현주주',
+            damageMultiplier: 3.8,
+            cooldown: 6,
+            description: '회전하는 칼날로 폭발적인 소리를 낸다.'
+          },
+          awakenSkill: {
+            name: '악보 완성',
+            damageMultiplier: 7.0,
+            cooldown: 13,
+            description: '적의 공격 리듬을 완벽하게 파악하여 반격한다.'
+          },
+          color: 'bg-fuchsia-600'
+        },
+        {
+          id: 'rengoku',
+          name: '렌고쿠 쿄주로',
+          title: '염주',
+          style: BreathingStyle.FLAME,
+          baseHp: 330,
+          baseAtk: 105,
+          price: 3200,
+          description: '마음을 불태우는 열정적인 지주.',
+          skill: {
+            name: '제5형: 염호',
+            damageMultiplier: 4.5,
+            cooldown: 7,
+            description: '맹호가 물어뜯는 듯한 참격.'
+          },
+          awakenSkill: {
+            name: '제9형: 연옥',
+            damageMultiplier: 8.0,
+            cooldown: 14,
+            description: '전신을 불태우며 돌진하는 오의.'
+          },
+          color: 'bg-red-600'
+        },
+        {
+          id: 'muichiro',
+          name: '토키토 무이치로',
+          title: '하주',
+          style: BreathingStyle.MIST,
+          baseHp: 240,
+          baseAtk: 128,
+          price: 3800,
+          description: '천재적인 재능을 가진 최연소 지주.',
+          skill: {
+            name: '제4형: 이류베기',
+            damageMultiplier: 4.0,
+            cooldown: 6,
+            description: '흐르듯이 베어내는 참격.'
+          },
+          awakenSkill: {
+            name: '제7형: 몽롱',
+            damageMultiplier: 7.5,
+            cooldown: 11,
+            description: '안개 속에 숨어 적을 교란시키며 벤다.'
+          },
+          color: 'bg-teal-400'
+        },
+        {
+          id: 'sanemi',
+          name: '시나즈가와 사네미',
+          title: '풍주',
+          style: BreathingStyle.WIND,
+          baseHp: 350,
+          baseAtk: 120,
+          price: 4200,
+          description: '가장 호전적이고 파괴적인 바람의 지주.',
+          skill: {
+            name: '제1형: 진선풍 깎기',
+            damageMultiplier: 4.5,
+            cooldown: 5,
+            description: '지면을 부수며 돌진하는 참격.'
+          },
+          awakenSkill: {
+            name: '제8형: 초열풍 베기',
+            damageMultiplier: 8.0,
+            cooldown: 12,
+            description: '폭풍처럼 몰아치는 연격.'
+          },
+          color: 'bg-green-700'
+        },
+        {
+          id: 'urokodaki',
+          name: '우로코다키 사콘지',
+          title: '전 수주',
+          style: BreathingStyle.WATER,
+          baseHp: 400,
+          baseAtk: 100,
+          price: 4500,
+          description: '탄지로와 기유의 스승.',
+          skill: {
+            name: '제8형: 용소',
+            damageMultiplier: 4.0,
+            cooldown: 7,
+            description: '위에서 아래로 강력하게 베어낸다.'
+          },
+          awakenSkill: {
+            name: '육성자의 가르침',
+            damageMultiplier: 6.5,
+            cooldown: 15,
+            description: '노련한 검술로 적의 빈틈을 파고든다.'
+          },
+          color: 'bg-blue-300'
+        },
+        {
+          id: 'jigoro',
+          name: '쿠와지마 지고로',
+          title: '전 명주',
+          style: BreathingStyle.THUNDER,
+          baseHp: 380,
+          baseAtk: 110,
+          price: 4500,
+          description: '젠이츠의 스승. 번개의 호흡 사용자.',
+          skill: {
+            name: '벽력일섬',
+            damageMultiplier: 4.2,
+            cooldown: 6,
+            description: '전광석화와 같은 발도술.'
+          },
+          awakenSkill: {
+            name: '낙뢰',
+            damageMultiplier: 7.0,
+            cooldown: 14,
+            description: '하늘에서 벼락을 떨어뜨린다.'
+          },
+          color: 'bg-yellow-700'
+        },
+        {
+          id: 'gyomei',
+          name: '히메지마 교메이',
+          title: '암주',
+          style: BreathingStyle.STONE,
+          baseHp: 525,
+          baseAtk: 150,
+          price: 6000,
+          description: '귀살대 최강의 사나이.',
+          skill: {
+            name: '제2형: 천면 부수기',
+            damageMultiplier: 5.0,
+            cooldown: 8,
+            description: '철퇴를 머리 위로 던져 내려찍는다.'
+          },
+          awakenSkill: {
+            name: '제5형: 와륜 형부',
+            damageMultiplier: 9.0,
+            cooldown: 16,
+            description: '거대한 철퇴와 도끼로 적을 완전히 분쇄한다.'
+          },
+          color: 'bg-stone-600'
+        },
+        {
+          id: 'yoriichi',
+          name: '츠기쿠니 요리이치',
+          title: '시초의 호흡',
+          style: BreathingStyle.SUN,
+          baseHp: 750,
+          baseAtk: 300,
+          price: 25000,
+          description: '모든 호흡의 시초이자 최강의 검사.',
+          skill: {
+            name: '해의 호흡: 13형',
+            damageMultiplier: 12.0,
+            cooldown: 12,
+            description: '무잔조차 공포에 떨게 만든 전설의 검기.'
+          },
+          awakenSkill: {
+            name: '혁도 발현',
+            damageMultiplier: 15.0,
+            cooldown: 20,
+            description: '검을 붉게 물들여 재생을 봉쇄하고 벤다.'
+          },
+          color: 'bg-red-800'
+        }
+      ];
+
+      const ENEMY_TEMPLATES = [
+        // 초반부 (Early Game)
+        { name: '약한 오니', maxHp: 30, atk: 4, rewardGold: 20, isBoss: false, imageColor: 'text-gray-400' },
+        { name: '굶주린 오니', maxHp: 50, atk: 6, rewardGold: 30, isBoss: false, imageColor: 'text-gray-500' },
+        { name: '사당 도깨비', maxHp: 80, atk: 10, rewardGold: 50, isBoss: false, imageColor: 'text-stone-500' },
+        { name: '손 도깨비', maxHp: 200, atk: 20, rewardGold: 150, isBoss: true, imageColor: 'text-green-800' },
+        { name: '늪 도깨비', maxHp: 250, atk: 25, rewardGold: 200, isBoss: false, imageColor: 'text-blue-900' },
+        { name: '거미 도깨비 (아빠)', maxHp: 400, atk: 40, rewardGold: 300, isBoss: false, imageColor: 'text-gray-200' },
+        
+        // 하현 (Lower Moons) - Bottom Up
+        { name: '하현 6: 쿄우가이', maxHp: 600, atk: 50, rewardGold: 500, isBoss: true, imageColor: 'text-orange-800' },
+        { name: '하현 5: 루이', maxHp: 800, atk: 70, rewardGold: 700, isBoss: true, imageColor: 'text-red-500' },
+        { name: '하현 1: 엔무', maxHp: 1200, atk: 100, rewardGold: 1200, isBoss: true, imageColor: 'text-indigo-500' },
+
+        // 상현 (Upper Moons) - Bottom Up
+        { name: '상현 6: 다키 & 규타로', maxHp: 2500, atk: 180, rewardGold: 3000, isBoss: true, imageColor: 'text-lime-500' },
+        { name: '상현 5: 굣코', maxHp: 4000, atk: 250, rewardGold: 5000, isBoss: true, imageColor: 'text-purple-300' },
+        { name: '상현 4: 한텐구', maxHp: 6500, atk: 350, rewardGold: 7000, isBoss: true, imageColor: 'text-yellow-700' },
+        { name: '상현 3: 아카자', maxHp: 12000, atk: 600, rewardGold: 12000, isBoss: true, imageColor: 'text-pink-600' },
+        { name: '상현 2: 도우마', maxHp: 16000, atk: 800, rewardGold: 20000, isBoss: true, imageColor: 'text-cyan-300' },
+        { name: '상현 1: 코쿠시보', maxHp: 25000, atk: 1500, rewardGold: 40000, isBoss: true, imageColor: 'text-purple-900' },
+        
+        // 최종 보스
+        { name: '키부츠지 무잔', maxHp: 50000, atk: 3000, rewardGold: 100000, isBoss: true, imageColor: 'text-red-700' },
+      ];
+
+      const SYNERGIES = [
+        {
+          name: '뱀과 사랑',
+          description: '오바나이와 미츠리가 함께하면 공격력 25% 증가',
+          condition: (ids) => ids.includes('obanai') && ids.includes('mitsuri'),
+          apply: (id, stats) => {
+             if (id === 'obanai' || id === 'mitsuri') {
+               return { ...stats, atk: Math.floor(stats.atk * 1.25) };
+             }
+             return stats;
+          }
+        },
+        {
+          name: '무한열차 팀',
+          description: '탄지로, 젠이츠, 이노스케, 렌고쿠가 함께하면 체력/공격력 20% 증가',
+          condition: (ids) => ids.includes('tanjiro') && ids.includes('zenitsu') && ids.includes('inosuke') && ids.includes('rengoku'),
+          apply: (id, stats) => {
+             if (['tanjiro', 'zenitsu', 'inosuke', 'rengoku'].includes(id)) {
+               return { 
+                 atk: Math.floor(stats.atk * 1.2), 
+                 maxHp: Math.floor(stats.maxHp * 1.2) 
+               };
+             }
+             return stats;
+          }
+        },
+        {
+          name: '불사천 형제',
+          description: '사네미와 겐야가 함께하면 체력 30% 증가',
+          condition: (ids) => ids.includes('sanemi') && ids.includes('genya'),
+          apply: (id, stats) => {
+            if (id === 'sanemi' || id === 'genya') {
+              return { ...stats, maxHp: Math.floor(stats.maxHp * 1.3) };
+            }
+            return stats;
+          }
+        },
+        {
+          name: '젠이츠의 긴장',
+          description: '네즈코가 있으면 젠이츠가 부끄러워 공격력이 50% 감소',
+          condition: (ids) => ids.includes('nezuko') && ids.includes('zenitsu'),
+          apply: (id, stats) => {
+            if (id === 'zenitsu') {
+              return { ...stats, atk: Math.floor(stats.atk * 0.5) };
+            }
+            return stats;
+          }
+        },
+        {
+          name: '카마도 남매',
+          description: '탄지로와 네즈코가 함께하면 공격력 10% 증가',
+          condition: (ids) => ids.includes('tanjiro') && ids.includes('nezuko'),
+          apply: (id, stats) => {
+            if (id === 'tanjiro' || id === 'nezuko') {
+              return { ...stats, atk: Math.floor(stats.atk * 1.1) };
+            }
+            return stats;
+          }
+        }
+      ];
+
+      // --- COMPONENTS ---
+
+      const ProgressBar = ({ current, max, colorClass, label, height = "h-4" }) => {
+        const percentage = Math.min(100, Math.max(0, (current / max) * 100));
+
+        return (
+          <div className="w-full relative">
+            <div className={`w-full bg-gray-800 rounded-full overflow-hidden border border-gray-700 ${height}`}>
+              <div
+                className={`${colorClass} ${height} transition-all duration-300 ease-out flex items-center justify-center`}
+                style={{ width: `${percentage}%` }}
+              >
+              </div>
+            </div>
+            {label && (
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <span className="text-xs font-bold text-white drop-shadow-md tracking-wider uppercase">{label}</span>
+              </div>
+            )}
+          </div>
+        );
+      };
+
+      // --- APP ---
+
+      const SAVE_KEY = 'ds_rpg_save_v1';
+
+      // --- Helper Functions ---
+      const getSynergies = (selectedIds) => {
+        return SYNERGIES.filter(s => s.condition(selectedIds));
+      };
+
+      const getDifficultyMultiplier = (diff) => {
+        switch(diff) {
+          case 'EASY': return 0.8;
+          case 'NORMAL': return 1.0;
+          case 'HARD': return 1.5;
+          default: return 1.0;
+        }
+      };
+
+      const getRewardMultiplier = (diff) => {
+        switch(diff) {
+          case 'EASY': return 0.8;
+          case 'NORMAL': return 1.0;
+          case 'HARD': return 1.5;
+          default: return 1.0;
+        }
+      };
+
+      // 1. Estate View (Hub)
+      const EstateView = ({ 
+        player, 
+        onStartPatrol, 
+        onHealAll, 
+        onUpgrade, 
+        onRecruit,
+        onToggleSlayer,
+        onChangeDifficulty,
+        onResetData
+      }) => {
+        const needsHeal = player.ownedSlayers.some(s => s.currentHp < s.maxHp);
+        const selectedCount = player.selectedSlayerIds.length;
+        const activeSynergies = getSynergies(player.selectedSlayerIds);
+
+        const enemyListLength = ENEMY_TEMPLATES.length;
+        const loopCount = Math.floor((player.stage - 1) / enemyListLength);
+        const enemyIndex = (player.stage - 1) % enemyListLength;
+        const nextEnemyName = ENEMY_TEMPLATES[enemyIndex].name;
+        
+        let prefix = "";
+        if (loopCount === 1) prefix = "중등 ";
+        else if (loopCount === 2) prefix = "상등 ";
+        else if (loopCount === 3) prefix = "특등 ";
+        else if (loopCount > 3) prefix = `초월(${loopCount-3}) `;
+
+        return (
+          <div className="flex flex-col h-screen bg-[url('https://images.unsplash.com/photo-1599587236720-302787e2213a?q=80&w=1920&auto=format&fit=crop')] bg-cover bg-center relative">
+            <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm"></div>
+            
+            <div className="relative z-10 p-4 sm:p-6 flex justify-between items-start border-b border-slate-700 bg-slate-900/50">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-cinzel text-indigo-100 drop-shadow-lg font-bold">우부야시키 저택</h1>
+                <p className="text-slate-400 text-xs sm:text-sm mt-1">
+                  현재 토벌 진행도: <span className="text-yellow-400 font-bold">STAGE {player.stage}</span>
+                  <span className="ml-2 text-[10px] sm:text-xs text-slate-500 hidden sm:inline">다음: {prefix}{nextEnemyName}</span>
+                </p>
+              </div>
+              <div className="flex flex-col items-end gap-2">
+                <div className="bg-slate-800 px-3 py-1 sm:px-4 sm:py-2 rounded-full border border-yellow-600/50 flex items-center gap-2 text-yellow-400 shadow-lg">
+                  <span className="text-lg sm:text-xl font-bold">{player.gold.toLocaleString()}</span>
+                  <span className="text-[10px] sm:text-xs uppercase tracking-wider">Gold</span>
+                </div>
+                <div className="flex gap-1 bg-slate-800/80 p-1 rounded-lg border border-slate-700">
+                  {['EASY', 'NORMAL', 'HARD'].map(d => (
+                    <button
+                      key={d}
+                      onClick={() => onChangeDifficulty(d)}
+                      className={`px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-bold rounded ${player.difficulty === d ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                    >
+                      {d}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="relative z-10 flex-1 overflow-y-auto p-4 sm:p-6 grid lg:grid-cols-2 gap-6 pb-20">
+              
+              <div className="space-y-4 flex flex-col order-2 lg:order-1">
+                <div className="bg-slate-800/90 rounded-xl p-6 border border-slate-700 shadow-xl">
+                  <h2 className="text-xl text-slate-200 mb-4 font-bold border-b border-slate-700 pb-2">작전 지도</h2>
+                  <div className="grid gap-3">
+                    <button 
+                      onClick={onStartPatrol}
+                      disabled={selectedCount === 0}
+                      className={`w-full py-4 rounded-lg font-bold text-lg flex items-center justify-center gap-3 shadow-lg transition-all active:scale-95 group border
+                        ${selectedCount > 0 
+                          ? 'bg-gradient-to-r from-red-900 to-red-700 hover:from-red-800 hover:to-red-600 border-red-500 text-white' 
+                          : 'bg-slate-800 border-slate-600 text-slate-500 cursor-not-allowed'}`}
+                    >
+                      <Swords size={24} className={selectedCount > 0 ? "group-hover:rotate-12 transition-transform" : ""} /> 
+                      {selectedCount > 0 ? `혈귀 토벌 시작` : '출전할 대원을 선택하세요'}
+                    </button>
+                    
+                    <button 
+                      onClick={onHealAll}
+                      disabled={!needsHeal}
+                      className={`w-full py-3 rounded-lg font-bold flex items-center justify-center gap-3 border transition-all ${needsHeal ? 'bg-emerald-900/80 border-emerald-500 text-emerald-100 hover:bg-emerald-800' : 'bg-slate-800 border-slate-700 text-slate-500 cursor-not-allowed'}`}
+                    >
+                      <Heart size={20} /> 
+                      {needsHeal ? '전원 무료 치료 (휴식)' : '모두 건강함'}
+                    </button>
+
+                    <button 
+                      onClick={onRecruit}
+                      className="w-full py-3 bg-indigo-900/50 hover:bg-indigo-900/80 border border-indigo-500/50 rounded-lg text-indigo-200 font-bold flex items-center justify-center gap-3 transition-all"
+                    >
+                      <ShoppingBag size={20} /> 
+                      대원 영입 / 상점
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="bg-slate-800/90 rounded-xl p-6 border border-slate-700 shadow-xl flex-1">
+                  <h2 className="text-lg text-slate-200 mb-3 font-bold flex items-center gap-2">
+                    <Users size={18} className="text-indigo-400"/> 활성화된 시너지
+                  </h2>
+                  {activeSynergies.length > 0 ? (
+                    <div className="space-y-2">
+                      {activeSynergies.map(syn => (
+                        <div key={syn.name} className="p-3 bg-indigo-900/30 border border-indigo-500/30 rounded-lg">
+                          <div className="font-bold text-indigo-200 text-sm">{syn.name}</div>
+                          <div className="text-xs text-indigo-300">{syn.description}</div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-slate-500 text-sm text-center py-4">활성화된 시너지가 없습니다.<br/>특정 대원들을 조합해보세요.</div>
+                  )}
+                </div>
+
+                <div className="text-center">
+                      <button onClick={onResetData} className="text-xs text-red-900 hover:text-red-500 underline">데이터 초기화</button>
+                </div>
+              </div>
+
+              <div className="bg-slate-800/90 rounded-xl p-6 border border-slate-700 shadow-xl overflow-hidden flex flex-col h-[500px] lg:h-auto order-1 lg:order-2">
+                <h2 className="text-xl text-slate-200 mb-4 font-bold border-b border-slate-700 pb-2 flex justify-between">
+                  <span>나의 귀살대</span>
+                  <span className={`text-sm font-bold ${selectedCount === 4 ? 'text-red-400' : 'text-slate-400'}`}>
+                    출전: {selectedCount}/4명
+                  </span>
+                </h2>
+                <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
+                  {player.ownedSlayers.map(slayer => {
+                    const upgradeCost = Math.floor(100 * Math.pow(1.2, slayer.level));
+                    const canUpgrade = player.gold >= upgradeCost;
+                    const isSelected = player.selectedSlayerIds.includes(slayer.id);
+                    const isAwakened = slayer.level >= 5;
+
+                    return (
+                      <div key={slayer.id} className={`p-3 rounded-lg border flex items-center justify-between transition-colors ${isSelected ? 'bg-indigo-900/30 border-indigo-500/50' : 'bg-slate-900 border-slate-700'}`}>
+                        
+                        <button 
+                          onClick={() => onToggleSlayer(slayer.id)}
+                          className="mr-3 text-slate-400 hover:text-white transition-colors"
+                        >
+                          {isSelected ? <CheckCircle2 className="text-green-500" size={24} /> : <Circle size={24} />}
+                        </button>
+
+                        <div className="flex items-center gap-3 flex-1">
+                          <div className={`relative w-10 h-10 rounded-full ${slayer.color} flex items-center justify-center text-white font-bold shadow-md shrink-0`}>
+                            {slayer.name.charAt(0)}
+                            {isAwakened && <Sparkles size={12} className="absolute -top-1 -right-1 text-yellow-300" />}
+                          </div>
+                          <div>
+                            <div className={`font-bold text-sm ${isSelected ? 'text-indigo-200' : 'text-slate-200'}`}>{slayer.name}</div>
+                            <div className="text-xs text-slate-500">Lv. {slayer.level} • {slayer.style}</div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-2">
+                          <div className="text-right mr-2 hidden sm:block">
+                            <div className="text-xs text-slate-400">HP {slayer.currentHp}/{slayer.maxHp}</div>
+                            <div className="text-xs text-slate-400">ATK {slayer.atk}</div>
+                          </div>
+                          <button 
+                            onClick={() => onUpgrade(slayer.id)}
+                            disabled={!canUpgrade}
+                            className={`px-3 py-1 text-xs rounded border transition-all flex flex-col items-center min-w-[60px] ${canUpgrade ? 'bg-amber-900/40 border-amber-600 text-amber-200 hover:bg-amber-800' : 'bg-slate-800 border-slate-700 text-slate-500 opacity-50'}`}
+                          >
+                            <span className="font-bold">강화</span>
+                            <span className="scale-90">{upgradeCost}G</span>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        );
+      };
+
+      // 2. Battle View
+      const BattleView = ({ 
+        player, 
+        enemy, 
+        onSkillUse, 
+        onAwakenSkillUse,
+        onRetreat,
+        battleLog
+      }) => {
+        const logEndRef = useRef(null);
+        const [effects, setEffects] = useState([]);
+        
+        const party = player.ownedSlayers.filter(s => player.selectedSlayerIds.includes(s.id));
+        const synergies = getSynergies(player.selectedSlayerIds);
+
+        useEffect(() => {
+          logEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }, [battleLog]);
+
+        useEffect(() => {
+          const lastLog = battleLog[battleLog.length - 1];
+          if (lastLog && lastLog.includes('!')) {
+              const parts = lastLog.split('의 ');
+              if (parts.length > 1) {
+                  const name = parts[0];
+                  const slayer = party.find(s => s.name === name);
+                  if (slayer) {
+                      const isUltimate = lastLog.includes(slayer.awakenSkill.name);
+                      const skillName = isUltimate ? slayer.awakenSkill.name : slayer.skill.name;
+
+                      const newEffect = {
+                          id: Date.now(),
+                          text: skillName,
+                          color: slayer.color,
+                          isUltimate
+                      };
+                      setEffects(prev => [...prev, newEffect]);
+                      setTimeout(() => {
+                          setEffects(prev => prev.filter(e => e.id !== newEffect.id));
+                      }, 1500);
+                  }
+              }
+          }
+        }, [battleLog]);
+
+        return (
+          <div className="flex flex-col h-screen bg-slate-950 relative overflow-hidden">
+            
+            <div className="absolute inset-0 pointer-events-none z-50 flex items-center justify-center">
+              {effects.map(effect => (
+                  <div key={effect.id} className="absolute animate-bounce-up opacity-0 flex flex-col items-center">
+                      <div className={`
+                          font-cinzel font-bold text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] px-6 py-2 rounded-lg 
+                          ${effect.isUltimate ? 'text-5xl border-2 border-yellow-400 bg-red-900/60' : 'text-3xl border border-white/20 bg-black/50'}
+                          backdrop-blur-md
+                      `}>
+                          {effect.text}
+                      </div>
+                  </div>
+              ))}
+            </div>
+
+            <div className="p-4 bg-black/60 backdrop-blur-md border-b border-red-900/30 flex justify-center items-center z-10 relative flex-col">
+              <div className="w-full max-w-2xl text-center">
+                <h2 className={`text-2xl font-bold mb-2 flex items-center justify-center gap-2 ${enemy.isBoss ? 'text-red-500 drop-shadow-[0_0_8px_rgba(220,38,38,0.8)]' : 'text-slate-300'}`}>
+                  <Skull size={24} /> {enemy.name} 
+                  <span className="text-sm px-2 py-0.5 rounded bg-slate-800 text-slate-400">Lv.{player.stage} ({player.difficulty})</span>
+                </h2>
+                <ProgressBar current={enemy.currentHp} max={enemy.maxHp} colorClass="bg-red-600" height="h-6" label={`${enemy.currentHp} / ${enemy.maxHp}`}/>
+              </div>
+            </div>
+
+            <div className="flex-1 flex flex-col items-center justify-center relative p-4 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900 to-black">
+              <div className={`transition-all duration-300 transform ${enemy.currentHp <= 0 ? 'scale-90 opacity-0 blur-xl' : 'scale-100 opacity-100'}`}>
+                <div className={`w-48 h-48 md:w-64 md:h-64 rounded-full bg-black border-4 ${enemy.isBoss ? 'border-red-600 shadow-[0_0_50px_rgba(220,38,38,0.4)]' : 'border-slate-600'} flex items-center justify-center`}>
+                  <Skull size={100} className={`${enemy.imageColor} animate-pulse`} />
+                </div>
+              </div>
+              
+              <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 flex-wrap px-4 pointer-events-none">
+                {synergies.map(s => (
+                  <div key={s.name} className="bg-indigo-900/60 border border-indigo-400/30 text-indigo-200 text-xs px-2 py-1 rounded backdrop-blur-sm">
+                    ⚡ {s.name}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-slate-900 border-t border-slate-800 p-4 pb-8 z-10">
+              <div className="max-w-5xl mx-auto">
+                
+                <div className="h-20 overflow-y-auto mb-4 bg-black/40 rounded p-2 text-xs font-mono text-slate-400 border border-slate-800/50">
+                  {battleLog.map((log, i) => (
+                    <div key={i} className="mb-1">{log}</div>
+                  ))}
+                  <div ref={logEndRef} />
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {party.map(slayer => {
+                    const isDead = slayer.currentHp <= 0;
+                    const now = Date.now();
+                    const cooldownRemaining = Math.max(0, Math.ceil((slayer.skillReadyAt - now) / 1000));
+                    const isReady = cooldownRemaining === 0;
+
+                    const awakenCooldownRemaining = Math.max(0, Math.ceil((slayer.awakenSkillReadyAt - now) / 1000));
+                    const isAwakenReady = awakenCooldownRemaining === 0;
+                    const isAwakened = slayer.level >= 5;
+
+                    return (
+                      <div 
+                        key={slayer.id} 
+                        className={`relative p-2 rounded-lg border transition-all ${isDead ? 'bg-red-900/20 border-red-900 grayscale opacity-70' : 'bg-slate-800 border-slate-700'}`}
+                      >
+                        <div className="flex justify-between items-start mb-2">
+                          <div className="text-xs font-bold text-slate-300 truncate">{slayer.name}</div>
+                          <div className="text-[10px] text-slate-500">Lv.{slayer.level}</div>
+                        </div>
+                        
+                        <div className="mb-2">
+                          <div className="w-full bg-slate-700 h-1.5 rounded-full overflow-hidden">
+                            <div className="bg-green-500 h-full transition-all" style={{ width: `${(slayer.currentHp / slayer.maxHp) * 100}%` }}></div>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-1">
+                          <button
+                              onClick={() => !isDead && isReady && onSkillUse(slayer.id)}
+                              disabled={isDead || !isReady}
+                              className={`flex-1 py-2 rounded text-[10px] font-bold transition-all relative overflow-hidden group ${
+                              isDead ? 'bg-slate-800 text-slate-600' :
+                              isReady 
+                                  ? 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-[0_0_10px_rgba(79,70,229,0.5)] border border-indigo-400' 
+                                  : 'bg-slate-700 text-slate-400 border border-slate-600 cursor-not-allowed'
+                              }`}
+                          >
+                              {isDead ? 'X' : isReady ? '기술' : `${cooldownRemaining}s`}
+                              {!isReady && !isDead && (
+                              <div 
+                                  className="absolute inset-0 bg-black/20 origin-left"
+                                  style={{ width: `${(cooldownRemaining / slayer.skill.cooldown) * 100}%` }}
+                              ></div>
+                              )}
+                          </button>
+
+                          {isAwakened && (
+                              <button
+                                  onClick={() => !isDead && isAwakenReady && onAwakenSkillUse(slayer.id)}
+                                  disabled={isDead || !isAwakenReady}
+                                  className={`flex-1 py-2 rounded text-[10px] font-bold transition-all relative overflow-hidden group ${
+                                  isDead ? 'bg-slate-800 text-slate-600' :
+                                  isAwakenReady 
+                                      ? 'bg-red-600 hover:bg-red-500 text-white shadow-[0_0_10px_rgba(220,38,38,0.5)] border border-red-400' 
+                                      : 'bg-slate-700 text-slate-400 border border-slate-600 cursor-not-allowed'
+                                  }`}
+                              >
+                                  {isDead ? 'X' : isAwakenReady ? '각성' : `${awakenCooldownRemaining}s`}
+                                  {!isAwakenReady && !isDead && (
+                                  <div 
+                                      className="absolute inset-0 bg-black/20 origin-left"
+                                      style={{ width: `${(awakenCooldownRemaining / slayer.awakenSkill.cooldown) * 100}%` }}
+                                  ></div>
+                                  )}
+                              </button>
+                          )}
+                          {!isAwakened && (
+                              <div className="flex-1 flex items-center justify-center bg-black/20 rounded border border-slate-800">
+                                  <span className="text-[9px] text-slate-600">Lv.5 필요</span>
+                              </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                  
+                  {[...Array(4 - party.length)].map((_, i) => (
+                      <div key={`empty-${i}`} className="p-2 rounded-lg border border-slate-800 bg-slate-900/50 flex items-center justify-center opacity-30">
+                          <span className="text-xs text-slate-500">빈 슬롯</span>
+                      </div>
+                  ))}
+                </div>
+
+                <button 
+                  onClick={onRetreat} 
+                  className="mt-4 w-full py-2 text-slate-500 text-sm hover:text-red-400 transition-colors"
+                >
+                  후퇴하기 (Estate로 복귀)
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      // 3. Recruit View
+      const RecruitView = ({ 
+        player, 
+        onBuy, 
+        onBack 
+      }) => {
+        return (
+          <div className="flex flex-col h-screen bg-slate-900">
+            <div className="p-4 border-b border-slate-700 bg-slate-800 flex items-center justify-between">
+              <button onClick={onBack} className="flex items-center text-slate-300 hover:text-white">
+                <ChevronRight className="rotate-180" /> 돌아가기
+              </button>
+              <h1 className="text-xl font-cinzel text-white">대원 모집</h1>
+              <div className="text-yellow-400 font-mono">{player.gold.toLocaleString()} G</div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-4 grid grid-cols-1 md:grid-cols-2 gap-4 pb-20">
+              {SLAYERS_DATA.map(slayer => {
+                const isOwned = player.ownedSlayers.some(s => s.id === slayer.id);
+                const canAfford = player.gold >= slayer.price;
+
+                return (
+                  <div key={slayer.id} className={`p-4 rounded-xl border flex gap-4 ${isOwned ? 'bg-slate-800/50 border-slate-700 opacity-50' : 'bg-slate-800 border-slate-600'}`}>
+                    <div className={`w-16 h-16 rounded-full shrink-0 ${slayer.color} flex items-center justify-center text-2xl font-bold text-white shadow-lg`}>
+                      {slayer.name.charAt(0)}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start">
+                        <h3 className="font-bold text-slate-200">{slayer.name}</h3>
+                        {isOwned ? (
+                          <span className="text-xs bg-slate-700 px-2 py-1 rounded text-slate-400">보유중</span>
+                        ) : (
+                          <span className="text-yellow-400 font-mono font-bold">{slayer.price === 0 ? '무료' : `${slayer.price} G`}</span>
+                        )}
+                      </div>
+                      <div className="text-xs text-indigo-400 mb-1">{slayer.title} • {slayer.style}</div>
+                      <p className="text-xs text-slate-400 mb-2">{slayer.description}</p>
+                      <div className="grid grid-cols-2 gap-2 text-[10px] bg-black/20 p-2 rounded">
+                          <div>
+                              <span className="text-indigo-300 block">기본 기술</span>
+                              <span className="text-slate-300">{slayer.skill.name}</span>
+                          </div>
+                          <div>
+                              <span className="text-red-300 block">각성 기술 (Lv.5)</span>
+                              <span className="text-slate-300">{slayer.awakenSkill.name}</span>
+                          </div>
+                      </div>
+                      
+                      {!isOwned && (
+                        <button 
+                          onClick={() => onBuy(slayer.id)}
+                          disabled={!canAfford}
+                          className={`mt-3 w-full py-2 rounded text-sm font-bold transition-all ${canAfford ? 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg' : 'bg-slate-700 text-slate-500 cursor-not-allowed'}`}
+                        >
+                          영입하기
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      };
+
+      // --- MAIN APP COMPONENT ---
+
+      const App = () => {
+        const [view, setView] = useState('ESTATE');
+        
+        const [player, setPlayer] = useState(() => {
+          try {
+            const saved = localStorage.getItem(SAVE_KEY);
+            if (saved) {
+              const parsed = JSON.parse(saved);
+              return {
+                  gold: parsed.gold ?? 0,
+                  stage: parsed.stage ?? 1,
+                  difficulty: parsed.difficulty ?? 'NORMAL',
+                  ownedSlayers: parsed.ownedSlayers ?? [],
+                  selectedSlayerIds: parsed.selectedSlayerIds ?? []
+              };
+            }
+          } catch (err) {
+            console.error("Failed to load save:", err);
+          }
+          return {
+            gold: 0,
+            stage: 1,
+            difficulty: 'NORMAL',
+            ownedSlayers: [],
+            selectedSlayerIds: []
+          };
+        });
+        
+        useEffect(() => {
+          localStorage.setItem(SAVE_KEY, JSON.stringify(player));
+        }, [player]);
+
+        useEffect(() => {
+          if (player.ownedSlayers.length === 0) {
+            const tanjiro = SLAYERS_DATA.find(s => s.id === 'tanjiro');
+            setPlayer(p => ({
+              ...p,
+              ownedSlayers: [{
+                ...tanjiro,
+                level: 1,
+                currentHp: tanjiro.baseHp,
+                maxHp: tanjiro.baseHp,
+                atk: tanjiro.baseAtk,
+                skillReadyAt: 0,
+                awakenSkillReadyAt: 0
+              }],
+              selectedSlayerIds: ['tanjiro']
+            }));
+          }
+        }, [player.ownedSlayers.length]);
+
+        const resetGameData = () => {
+            if(window.confirm("정말로 모든 데이터를 초기화하시겠습니까?")) {
+                localStorage.removeItem(SAVE_KEY);
+                setPlayer({
+                    gold: 0,
+                    stage: 1,
+                    difficulty: 'NORMAL',
+                    ownedSlayers: [],
+                    selectedSlayerIds: []
+                });
+                window.location.reload();
+            }
+        };
+
+        const [enemy, setEnemy] = useState(null);
+        const [battleLog, setBattleLog] = useState([]);
+        const battleIntervalRef = useRef(null);
+
+        const addLog = (msg) => {
+          setBattleLog(prev => [...prev.slice(-4), msg]);
+        };
+
+        const toggleSlayerSelection = (slayerId) => {
+            setPlayer(prev => {
+                const isSelected = prev.selectedSlayerIds.includes(slayerId);
+                if (isSelected) {
+                    return { ...prev, selectedSlayerIds: prev.selectedSlayerIds.filter(id => id !== slayerId) };
+                } else {
+                    if (prev.selectedSlayerIds.length >= 4) return prev;
+                    return { ...prev, selectedSlayerIds: [...prev.selectedSlayerIds, slayerId] };
+                }
+            });
+        };
+
+        const changeDifficulty = (diff) => {
+          setPlayer(prev => ({...prev, difficulty: diff}));
+        };
+
+        const startPatrol = () => {
+          const enemyListLength = ENEMY_TEMPLATES.length;
+          const loopCount = Math.floor((player.stage - 1) / enemyListLength);
+          const enemyIndex = (player.stage - 1) % enemyListLength;
+
+          const template = ENEMY_TEMPLATES[enemyIndex];
+          
+          let loopMult = 1.0;
+          if (loopCount === 1) loopMult = 1.5;
+          else if (loopCount === 2) loopMult = 2.5;
+          else if (loopCount === 3) loopMult = 4.0;
+          else if (loopCount > 3) loopMult = 4.0 + (loopCount - 3) * 1.5;
+
+          const diffScaling = getDifficultyMultiplier(player.difficulty);
+          const finalMultiplier = loopMult * diffScaling;
+          
+          let prefix = "";
+          if (loopCount === 1) prefix = "중등 ";
+          else if (loopCount === 2) prefix = "상등 ";
+          else if (loopCount === 3) prefix = "특등 ";
+          else if (loopCount > 3) prefix = `초월(${loopCount-3}) `;
+
+          const newEnemy = {
+            id: Math.random().toString(),
+            name: `${prefix}${template.name}`,
+            maxHp: Math.floor((template.maxHp || 100) * finalMultiplier),
+            currentHp: Math.floor((template.maxHp || 100) * finalMultiplier),
+            atk: Math.floor((template.atk || 10) * finalMultiplier),
+            rewardGold: Math.floor((template.rewardGold || 50) * finalMultiplier * getRewardMultiplier(player.difficulty)),
+            isBoss: template.isBoss || false,
+            imageColor: template.imageColor || 'text-gray-500'
+          };
+
+          setEnemy(newEnemy);
+          setBattleLog([`STAGE ${player.stage} - ${newEnemy.name}가 나타났다!`]);
+          setView('BATTLE');
+        };
+
+        const calculateDamage = (slayer, damageMultiplier) => {
+          const synergies = getSynergies(player.selectedSlayerIds);
+          let baseAtk = slayer.atk;
+          
+          let multiplier = 1.0;
+          synergies.forEach(s => {
+             const mod = s.apply(slayer.id, { atk: 100, maxHp: 100 }); 
+             if (mod.atk !== 100) multiplier *= (mod.atk / 100);
+          });
+
+          const totalAtk = baseAtk * multiplier;
+          const skillDmg = totalAtk * damageMultiplier;
+          
+          const isCrit = Math.random() < 0.2;
+          const finalDmg = Math.floor(isCrit ? skillDmg * 1.5 : skillDmg);
+
+          return { finalDmg, isCrit };
+        };
+
+        const useSkill = (slayerId) => {
+          if (!enemy || enemy.currentHp <= 0) return;
+          
+          setPlayer(prev => {
+            const newSlayers = prev.ownedSlayers.map(s => {
+              if (s.id === slayerId) {
+                const { finalDmg, isCrit } = calculateDamage(s, s.skill.damageMultiplier);
+                
+                setEnemy(e => e ? { ...e, currentHp: Math.max(0, e.currentHp - finalDmg) } : null);
+                addLog(`${s.name}의 ${s.skill.name}! ${finalDmg.toLocaleString()} 피해! ${isCrit ? '(치명타!)' : ''}`);
+                
+                return {
+                  ...s,
+                  skillReadyAt: Date.now() + (s.skill.cooldown * 1000)
+                };
+              }
+              return s;
+            });
+            return { ...prev, ownedSlayers: newSlayers };
+          });
+        };
+
+        const useAwakenSkill = (slayerId) => {
+          if (!enemy || enemy.currentHp <= 0) return;
+
+          setPlayer(prev => {
+              const newSlayers = prev.ownedSlayers.map(s => {
+                if (s.id === slayerId) {
+                  const { finalDmg, isCrit } = calculateDamage(s, s.awakenSkill.damageMultiplier);
+                  
+                  setEnemy(e => e ? { ...e, currentHp: Math.max(0, e.currentHp - finalDmg) } : null);
+                  addLog(`${s.name}의 ${s.awakenSkill.name}! ${finalDmg.toLocaleString()} 피해! ${isCrit ? '(치명타!)' : ''}`);
+                  
+                  return {
+                    ...s,
+                    awakenSkillReadyAt: Date.now() + (s.awakenSkill.cooldown * 1000)
+                  };
+                }
+                return s;
+              });
+              return { ...prev, ownedSlayers: newSlayers };
+            });
+        };
+
+        const buySlayer = (slayerId) => {
+          const template = SLAYERS_DATA.find(s => s.id === slayerId);
+          if (!template) return;
+          if (player.gold < template.price) return;
+          if (player.ownedSlayers.some(s => s.id === slayerId)) return;
+
+          setPlayer(prev => ({
+            ...prev,
+            gold: prev.gold - template.price,
+            ownedSlayers: [...prev.ownedSlayers, {
+              ...template,
+              level: 1,
+              currentHp: template.baseHp,
+              maxHp: template.baseHp,
+              atk: template.baseAtk,
+              skillReadyAt: 0,
+              awakenSkillReadyAt: 0
+            }]
+          }));
+        };
+
+        const upgradeSlayer = (slayerId) => {
+          setPlayer(prev => {
+            const slayer = prev.ownedSlayers.find(s => s.id === slayerId);
+            if (!slayer) return prev;
+            
+            const cost = Math.floor(100 * Math.pow(1.2, slayer.level));
+            if (prev.gold < cost) return prev;
+            
+            const nextLevel = slayer.level + 1;
+            
+            const baseMaxHp = Math.floor(slayer.baseHp * (1 + nextLevel * 0.2));
+            const baseAtk = Math.floor(slayer.baseAtk * (1 + nextLevel * 0.15));
+
+            return {
+              ...prev,
+              gold: prev.gold - cost,
+              ownedSlayers: prev.ownedSlayers.map(s => {
+                if (s.id === slayerId) {
+                  return {
+                    ...s,
+                    level: nextLevel,
+                    maxHp: baseMaxHp,
+                    atk: baseAtk,
+                    currentHp: baseMaxHp 
+                  };
+                }
+                return s;
+              })
+            };
+          });
+        };
+
+        const healAll = () => {
+          setPlayer(prev => ({
+            ...prev,
+            ownedSlayers: prev.ownedSlayers.map(s => ({ ...s, currentHp: s.maxHp }))
+          }));
+        };
+
+        useEffect(() => {
+          if (view !== 'BATTLE' || !enemy) {
+            if (battleIntervalRef.current) clearInterval(battleIntervalRef.current);
+            return;
+          }
+
+          battleIntervalRef.current = window.setInterval(() => {
+            if (enemy.currentHp <= 0) {
+              addLog(`토벌 완료! ${enemy.rewardGold.toLocaleString()}G 획득`);
+              setTimeout(() => {
+                setPlayer(p => ({ 
+                    ...p, 
+                    gold: p.gold + enemy.rewardGold,
+                    stage: p.stage + 1
+                }));
+                setEnemy(null);
+                setView('ESTATE');
+              }, 1500);
+              return;
+            }
+
+            const partyIds = player.selectedSlayerIds;
+            const partyMembers = player.ownedSlayers.filter(s => partyIds.includes(s.id));
+            const aliveSlayers = partyMembers.filter(s => s.currentHp > 0);
+            
+            if (aliveSlayers.length === 0) {
+              const consolationGold = Math.floor(enemy.rewardGold * 0.1);
+              addLog(`전멸... 은(는)폐부대가 ${consolationGold}G를 수습했습니다.`);
+              setTimeout(() => {
+                setPlayer(p => ({
+                  ...p,
+                  gold: p.gold + consolationGold
+                }));
+                setEnemy(null);
+                setView('ESTATE');
+              }, 2500);
+              return;
+            }
+
+            const target = aliveSlayers[Math.floor(Math.random() * aliveSlayers.length)];
+            
+            setPlayer(prev => {
+              const newSlayers = prev.ownedSlayers.map(s => {
+                return s;
+              });
+
+              const updatedSlayers = newSlayers.map(s => {
+                 if (target && s.id === target.id) {
+                   const dmg = Math.max(1, enemy.atk - Math.floor(s.level * 2)); 
+                   return { ...s, currentHp: Math.max(0, s.currentHp - dmg) };
+                 }
+                 return s;
+              });
+              
+              return { ...prev, ownedSlayers: updatedSlayers };
+            });
+            
+            let totalPlayerDmg = 0;
+            aliveSlayers.forEach(s => {
+               const { finalDmg } = calculateDamage(s, 0.4);
+               totalPlayerDmg += finalDmg;
+            });
+
+            setEnemy(prev => {
+              if (!prev) return null;
+              return { ...prev, currentHp: Math.max(0, prev.currentHp - totalPlayerDmg) };
+            });
+
+          }, 1200); 
+
+          const uiTicker = setInterval(() => {
+             setPlayer(p => ({...p})); 
+          }, 100);
+
+          return () => {
+            if (battleIntervalRef.current) clearInterval(battleIntervalRef.current);
+            clearInterval(uiTicker);
+          };
+        }, [view, enemy, player.ownedSlayers, player.selectedSlayerIds]);
+
+        if (view === 'ESTATE') {
+          return (
+            <EstateView 
+              player={player}
+              onStartPatrol={startPatrol}
+              onHealAll={healAll}
+              onRecruit={() => setView('RECRUIT')}
+              onUpgrade={upgradeSlayer}
+              onToggleSlayer={toggleSlayerSelection}
+              onChangeDifficulty={changeDifficulty}
+              onResetData={resetGameData}
+            />
+          );
+        }
+
+        if (view === 'RECRUIT') {
+          return (
+            <RecruitView 
+              player={player}
+              onBuy={buySlayer}
+              onBack={() => setView('ESTATE')}
+            />
+          );
+        }
+
+        if (view === 'BATTLE' && enemy) {
+          return (
+            <BattleView 
+              player={player}
+              enemy={enemy}
+              onSkillUse={useSkill}
+              onAwakenSkillUse={useAwakenSkill}
+              onRetreat={() => {
+                setEnemy(null);
+                setView('ESTATE');
+              }}
+              battleLog={battleLog}
+            />
+          );
+        }
+
+        return <div className="bg-black text-white h-screen flex items-center justify-center">Loading...</div>;
+      };
+
+      const root = createRoot(document.getElementById('root'));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
