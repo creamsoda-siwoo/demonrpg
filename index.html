@@ -15,14 +15,17 @@
         background-color: #020617;
         color: #e2e8f0;
         margin: 0;
-        overflow: hidden; /* Prevent body scroll, handle in app */
-        touch-action: none;
+        overflow: hidden; /* App handles scrolling internally */
+        touch-action: manipulation;
       }
       .font-cinzel {
         font-family: 'Cinzel', serif;
       }
+      
+      /* Custom Scrollbar */
       .custom-scrollbar::-webkit-scrollbar {
         width: 6px;
+        height: 6px;
       }
       .custom-scrollbar::-webkit-scrollbar-track {
         background: #0f172a; 
@@ -68,8 +71,8 @@
     "react": "https://esm.sh/react@18.2.0",
     "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
     "lucide-react": "https://esm.sh/lucide-react@0.292.0?external=react",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
-    "react/": "https://aistudiocdn.com/react@^19.2.1/"
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/"
   }
 }
 </script>
@@ -82,7 +85,7 @@
       import { createRoot } from 'react-dom/client';
       import { Swords, Home, ShoppingBag, Heart, Skull, Zap, ChevronRight, CheckCircle2, Circle, Settings, Users, ShieldAlert, Sparkles, Flame, Hammer, Mountain, Gem, ArrowUpCircle, Backpack, AlertTriangle, Flower, Target, BarChart2, BookOpen, Filter, SortAsc, Dumbbell, PlayCircle, PauseCircle } from 'lucide-react';
 
-      // --- TYPES ---
+      // --- TYPES & CONSTANTS ---
       
       const BreathingStyle = {
         WATER: '물의 호흡',
@@ -103,9 +106,6 @@
         NONE: '호흡 없음 (특수)'
       };
 
-      // --- CONSTANTS ---
-
-      // Ranks System
       const RANKS = [
         { id: 0, name: '계급: 계 (Mizunoto)', minLv: 1, multiplier: 1.0, cost: 0 },
         { id: 1, name: '계급: 경 (Kanoe)', minLv: 10, multiplier: 1.5, cost: 2000 },
@@ -115,9 +115,9 @@
       ];
 
       const TRAINING_TYPES = [
-        { id: 'muscle', name: '기초 체력 단련', desc: '모든 대원의 체력 +5%', costBase: 1000, costScale: 1.5, stat: 'maxHp', val: 0.05, icon: <Dumbbell/> },
-        { id: 'swing', name: '검술 휘두르기', desc: '모든 대원의 공격력 +3%', costBase: 1500, costScale: 1.6, stat: 'atk', val: 0.03, icon: <Swords/> },
-        { id: 'meditation', name: '전집중 호흡 상중', desc: '치명타 확률 +1%', costBase: 3000, costScale: 2.0, stat: 'crit', val: 1, icon: <Zap/> },
+        { id: 'muscle', name: '기초 체력 단련', desc: '모든 대원의 체력 +5%', costBase: 1000, costScale: 1.5, stat: 'maxHp', val: 0.05, icon: <Dumbbell size={24}/> },
+        { id: 'swing', name: '검술 휘두르기', desc: '모든 대원의 공격력 +3%', costBase: 1500, costScale: 1.6, stat: 'atk', val: 0.03, icon: <Swords size={24}/> },
+        { id: 'meditation', name: '전집중 호흡 상중', desc: '치명타 확률 +1%', costBase: 3000, costScale: 2.0, stat: 'crit', val: 1, icon: <Zap size={24}/> },
       ];
 
       const SLAYERS_DATA = [
@@ -944,8 +944,6 @@
         }
       ];
 
-      // --- ARTIFACTS SYSTEM ---
-      
       const ARTIFACT_RARITY = {
         COMMON: { name: '일반', color: 'text-slate-400', border: 'border-slate-600', dropRate: 0.6 },
         RARE: { name: '희귀', color: 'text-blue-400', border: 'border-blue-500', dropRate: 0.3 },
@@ -1042,26 +1040,19 @@
          const currentRank = selectedSlayer ? RANKS[selectedSlayer.rankIdx || 0] : null;
          const nextRank = selectedSlayer ? RANKS[(selectedSlayer.rankIdx || 0) + 1] : null;
          
-         // Upgrade Calculations
          const upgradeCost = selectedSlayer ? Math.floor(100 * Math.pow(1.2, selectedSlayer.level)) : 0;
          const canUpgrade = selectedSlayer && player.gold >= upgradeCost;
-
-         // Rank Up Calc
          const canPromote = selectedSlayer && nextRank && selectedSlayer.level >= nextRank.minLv && player.gold >= nextRank.cost;
-
-         // Mark Calc
          const canMark = selectedSlayer && selectedSlayer.level >= 50;
          const markCost = { gold: 100000, iron: 100 };
          const canAffordMark = player.gold >= markCost.gold && player.ironSand >= markCost.iron;
-
-         // Weapon Calc
          const weaponLv = selectedSlayer?.weaponLevel || 0;
          const weaponIronCost = 10 + (weaponLv * 5);
          const weaponGoldCost = 1000 + (weaponLv * 500);
          const canRefine = selectedSlayer && player.ironSand >= weaponIronCost && player.gold >= weaponGoldCost;
 
          return (
-            <div className="flex flex-col h-full bg-slate-900">
+            <div className="flex flex-col h-full bg-slate-900 absolute inset-0 z-50">
                 {/* Header */}
                 <div className="p-4 bg-slate-800 border-b border-slate-700 flex justify-between items-center shrink-0">
                     <button onClick={onBack} className="flex items-center gap-2 text-slate-300 hover:text-white">
@@ -1076,7 +1067,7 @@
 
                 <div className="flex-1 flex flex-col md:flex-row overflow-hidden min-h-0">
                     {/* Left: List */}
-                    <div className="w-full md:w-1/3 bg-slate-900 border-r border-slate-800 flex flex-col min-h-0 md:h-full">
+                    <div className="w-full md:w-1/3 bg-slate-900 border-r border-slate-800 flex flex-col min-h-0 h-1/3 md:h-full">
                         <div className="p-3 flex gap-2 border-b border-slate-800 shrink-0">
                             {['LEVEL', 'RANK', 'ATK'].map(m => (
                                 <button key={m} onClick={() => setSortMode(m)} className={`flex-1 text-[10px] py-1 rounded border ${sortMode === m ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-slate-800 border-slate-700 text-slate-500'}`}>
@@ -1084,7 +1075,7 @@
                                 </button>
                             ))}
                         </div>
-                        <div className="flex-1 overflow-y-auto p-2 space-y-2 custom-scrollbar">
+                        <div className="flex-1 overflow-y-auto p-2 space-y-2 custom-scrollbar min-h-0">
                             {sortedSlayers.map(slayer => {
                                 const isSelected = slayer.id === selectedSlayerId;
                                 const inParty = player.selectedSlayerIds.includes(slayer.id);
@@ -1113,7 +1104,7 @@
 
                     {/* Right: Detail */}
                     {selectedSlayer ? (
-                        <div className="flex-1 bg-slate-900 p-6 overflow-y-auto custom-scrollbar flex flex-col gap-6 h-full">
+                        <div className="flex-1 bg-slate-900 p-6 overflow-y-auto custom-scrollbar flex flex-col gap-6 h-2/3 md:h-full min-h-0">
                             {/* Top Profile */}
                             <div className="flex flex-col md:flex-row gap-6 items-center md:items-start shrink-0">
                                 <div className={`w-32 h-32 md:w-40 md:h-40 rounded-xl ${selectedSlayer.color} flex items-center justify-center text-6xl text-white shadow-[0_0_30px_rgba(255,255,255,0.1)] relative group shrink-0`}>
@@ -1152,7 +1143,7 @@
                             </div>
 
                             {/* Actions Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 shrink-0">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 shrink-0 pb-10">
                                 {/* Level Up */}
                                 <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
                                     <div className="flex justify-between mb-2">
@@ -1214,45 +1205,6 @@
                                     {selectedSlayer.markLevel > 0 && <div className="absolute -bottom-4 -right-4 text-6xl text-red-500/10 font-black z-0 pointer-events-none">{selectedSlayer.markLevel}</div>}
                                 </div>
                             </div>
-
-                            {/* Artifacts */}
-                            <div className="bg-slate-800 p-4 rounded-lg border border-slate-700 shrink-0 mb-6">
-                                <h3 className="font-bold text-slate-200 mb-3 flex justify-between items-center">
-                                    <span>장착 유물</span>
-                                    {equippedArtifact && <button onClick={() => onUnequipArtifact(selectedSlayer.id)} className="text-xs text-red-400 underline">해제</button>}
-                                </h3>
-                                {equippedArtifact ? (
-                                    <div className={`p-3 rounded border ${ARTIFACT_RARITY[equippedArtifact.rarity].border} bg-slate-900 flex justify-between items-center`}>
-                                        <div>
-                                            <div className={`font-bold ${ARTIFACT_RARITY[equippedArtifact.rarity].color}`}>{equippedArtifact.name}</div>
-                                            <div className="text-xs text-slate-400">{equippedArtifact.description}</div>
-                                        </div>
-                                        <div className="text-xs font-mono">{ARTIFACT_RARITY[equippedArtifact.rarity].name}</div>
-                                    </div>
-                                ) : (
-                                    <div className="text-slate-500 text-sm text-center py-4 border border-dashed border-slate-600 rounded">장착된 유물이 없습니다.</div>
-                                )}
-                                
-                                <div className="mt-4">
-                                    <div className="text-xs text-slate-400 mb-2">보유 유물 (클릭하여 장착)</div>
-                                    <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar min-h-[60px]">
-                                        {player.inventory.filter(i => !player.ownedSlayers.some(s => s.equippedArtifactId === i.id)).map(item => (
-                                            <button 
-                                                key={item.id}
-                                                onClick={() => onEquipArtifact(selectedSlayer.id, item.id)}
-                                                className={`flex-shrink-0 p-2 rounded border ${ARTIFACT_RARITY[item.rarity].border} bg-slate-900 w-32 text-left hover:bg-slate-800 transition-colors`}
-                                            >
-                                                <div className={`text-xs font-bold truncate ${ARTIFACT_RARITY[item.rarity].color}`}>{item.name}</div>
-                                                <div className="text-[10px] text-slate-500 truncate">{item.description}</div>
-                                            </button>
-                                        ))}
-                                        {player.inventory.filter(i => !player.ownedSlayers.some(s => s.equippedArtifactId === i.id)).length === 0 && (
-                                            <span className="text-xs text-slate-600 italic whitespace-nowrap">장착 가능한 유물이 없습니다.</span>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
                     ) : (
                         <div className="flex-1 bg-slate-900 flex items-center justify-center text-slate-500">
@@ -1296,13 +1248,13 @@
         else if (loopCount > 3) prefix = `초월(${loopCount-3}) `;
 
         return (
-          <div className="flex flex-col h-full bg-[url('https://images.unsplash.com/photo-1599587236720-302787e2213a?q=80&w=1920&auto=format&fit=crop')] bg-cover bg-center relative">
+          <div className="flex flex-col h-full w-full absolute inset-0 bg-[url('https://images.unsplash.com/photo-1599587236720-302787e2213a?q=80&w=1920&auto=format&fit=crop')] bg-cover bg-center overflow-hidden">
             <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-sm"></div>
             
             {/* Header */}
             <div className="relative z-10 p-4 sm:p-6 flex justify-between items-start border-b border-slate-700 bg-slate-900/50 shrink-0">
               <div>
-                <h1 className="text-xl sm:text-3xl font-cinzel text-indigo-100 drop-shadow-lg font-bold">귀살대 본부</h1>
+                <h1 className="text-xl sm:text-3xl font-cinzel text-indigo-100 drop-shadow-lg font-bold">귀살대 본부 (Ver 8.0)</h1>
                 <p className="text-slate-400 text-xs sm:text-sm mt-1">
                   진행: <span className="text-yellow-400 font-bold">STAGE {player.stage}</span>
                 </p>
@@ -1316,10 +1268,6 @@
                     <div className="bg-slate-800 px-3 py-1 rounded-full border border-red-600/50 flex items-center gap-2 text-red-400 shadow-lg">
                         <span className="text-sm sm:text-xl font-bold">{player.ironSand.toLocaleString()}</span>
                         <span className="text-[10px] sm:text-xs tracking-wider">성성철</span>
-                    </div>
-                     <div className="bg-slate-800 px-3 py-1 rounded-full border border-blue-600/50 flex items-center gap-2 text-blue-400 shadow-lg">
-                        <span className="text-sm sm:text-xl font-bold">{player.blueLily.toLocaleString()}</span>
-                        <span className="text-[10px] sm:text-xs tracking-wider">피안화</span>
                     </div>
                 </div>
                 
@@ -1357,7 +1305,7 @@
             </div>
 
             {/* Main Content Area */}
-            <div className="relative z-10 flex-1 bg-slate-800/90 border-t border-slate-700 p-4 sm:p-6 overflow-hidden min-h-0">
+            <div className="relative z-10 flex-1 bg-slate-800/90 border-t border-slate-700 p-4 sm:p-6 overflow-hidden min-h-0 flex flex-col">
               
               {/* --- HQ TAB --- */}
               {activeTab === 'HQ' && (
@@ -1426,7 +1374,7 @@
                     </div>
 
                     {/* Current Party Summary */}
-                    <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700 flex flex-col h-[500px] lg:h-auto overflow-hidden">
+                    <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700 flex flex-col h-[400px] lg:h-auto overflow-hidden">
                         <div className="flex justify-between items-center mb-4 border-b border-slate-700 pb-2">
                              <h2 className="text-xl text-slate-200 font-bold">출전 대원</h2>
                              <span className={`text-sm font-bold ${selectedCount === 4 ? 'text-red-400' : 'text-slate-400'}`}>
@@ -1434,7 +1382,7 @@
                             </span>
                         </div>
                         
-                        <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
+                        <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar min-h-0">
                         {selectedCount === 0 && <div className="text-center text-slate-500 py-10">대원이 선택되지 않았습니다.<br/>[대원 관리]에서 출전시킬 대원을 선택하세요.</div>}
                         {player.ownedSlayers.filter(s => player.selectedSlayerIds.includes(s.id)).map(slayer => {
                             const equipped = player.inventory.find(i => i.id === slayer.equippedArtifactId);
@@ -1475,7 +1423,7 @@
                           <p className="text-slate-400 text-sm">전체 대원의 능력치를 영구적으로 강화합니다.</p>
                       </div>
                       
-                      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto pb-10">
                         {TRAINING_TYPES.map(t => {
                             const currentLv = player.trainingLevels?.[t.id] || 0;
                             const cost = Math.floor(t.costBase * Math.pow(t.costScale, currentLv));
@@ -1589,7 +1537,7 @@
                           <p className="text-slate-400 text-sm">희귀한 재화를 교환하거나 암시장을 이용할 수 있습니다.</p>
                       </div>
                       
-                      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 pb-10">
                           {/* Item 1 */}
                           <div className="bg-slate-900/80 border border-slate-700 p-4 rounded-xl flex flex-col gap-2">
                               <div className="h-24 bg-purple-900/30 rounded flex items-center justify-center mb-2 border border-purple-500/20">
@@ -1625,7 +1573,7 @@
                           </div>
                       </div>
 
-                      <div className="mt-8 pt-6 border-t border-slate-700">
+                      <div className="mt-8 pt-6 border-t border-slate-700 pb-10">
                           <h3 className="text-lg font-bold text-slate-400 mb-4">암시장 (Gold ↔ Iron)</h3>
                           <div className="flex gap-4">
                                <button onClick={() => onBuyShopItem('BUY_IRON_GOLD', 100000)} className="flex-1 py-3 bg-slate-800 border border-slate-600 hover:bg-slate-700 rounded text-slate-300 text-sm">
@@ -1675,8 +1623,9 @@
                     const isDead = s.currentHp <= 0;
                     if (isDead) return;
 
-                    // Try Ultimate
-                    if (s.level >= 5 && now >= s.awakenSkillReadyAt) {
+                    // Try Ultimate first
+                    const isAwakened = s.level >= 10;
+                    if (isAwakened && now >= s.awakenSkillReadyAt) {
                          onAwakenSkillUse(s.id);
                     } else if (now >= s.skillReadyAt) {
                         onSkillUse(s.id);
@@ -1729,7 +1678,7 @@
         }, [battleLog]);
 
         return (
-          <div className={`flex flex-col h-full bg-slate-950 relative overflow-hidden ${enemySkillEffect ? 'animate-shake' : ''}`}>
+          <div className={`flex flex-col h-full bg-slate-950 relative overflow-hidden absolute inset-0 z-50 ${enemySkillEffect ? 'animate-shake' : ''}`}>
             
             {/* Enemy Skill Overlay */}
             {enemySkillEffect && (
@@ -1944,7 +1893,7 @@
         onBack 
       }) => {
         return (
-          <div className="flex flex-col h-full bg-slate-900">
+          <div className="flex flex-col h-full bg-slate-900 absolute inset-0 z-50">
             <div className="p-4 border-b border-slate-700 bg-slate-800 flex items-center justify-between shrink-0">
               <button onClick={onBack} className="flex items-center text-slate-300 hover:text-white">
                 <ChevronRight className="rotate-180" /> 돌아가기
