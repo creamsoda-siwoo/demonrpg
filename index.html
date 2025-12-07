@@ -3,8 +3,8 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>귀멸의 칼날</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>귀멸의 칼날: 귀살대 키우기</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
@@ -16,6 +16,7 @@
         color: #e2e8f0;
         margin: 0;
         overflow: hidden; /* Prevent body scroll, handle in app */
+        touch-action: none;
       }
       .font-cinzel {
         font-family: 'Cinzel', serif;
@@ -79,7 +80,7 @@
     <script type="text/babel" data-type="module">
       import React, { useState, useEffect, useRef } from 'react';
       import { createRoot } from 'react-dom/client';
-      import { Swords, Home, ShoppingBag, Heart, Skull, Zap, ChevronRight, CheckCircle2, Circle, Settings, Users, ShieldAlert, Sparkles, Flame, Hammer, Mountain, Gem, ArrowUpCircle, Backpack, AlertTriangle, Flower, Target, BarChart2, BookOpen, Filter, SortAsc } from 'lucide-react';
+      import { Swords, Home, ShoppingBag, Heart, Skull, Zap, ChevronRight, CheckCircle2, Circle, Settings, Users, ShieldAlert, Sparkles, Flame, Hammer, Mountain, Gem, ArrowUpCircle, Backpack, AlertTriangle, Flower, Target, BarChart2, BookOpen, Filter, SortAsc, Dumbbell, PlayCircle, PauseCircle } from 'lucide-react';
 
       // --- TYPES ---
       
@@ -111,6 +112,12 @@
         { id: 2, name: '계급: 병 (Hinoe)', minLv: 30, multiplier: 2.5, cost: 10000 },
         { id: 3, name: '계급: 갑 (Kinoe)', minLv: 50, multiplier: 4.0, cost: 50000 },
         { id: 4, name: '주 (Hashira)', minLv: 80, multiplier: 7.0, cost: 200000 }
+      ];
+
+      const TRAINING_TYPES = [
+        { id: 'muscle', name: '기초 체력 단련', desc: '모든 대원의 체력 +5%', costBase: 1000, costScale: 1.5, stat: 'maxHp', val: 0.05, icon: <Dumbbell/> },
+        { id: 'swing', name: '검술 휘두르기', desc: '모든 대원의 공격력 +3%', costBase: 1500, costScale: 1.6, stat: 'atk', val: 0.03, icon: <Swords/> },
+        { id: 'meditation', name: '전집중 호흡 상중', desc: '치명타 확률 +1%', costBase: 3000, costScale: 2.0, stat: 'crit', val: 1, icon: <Zap/> },
       ];
 
       const SLAYERS_DATA = [
@@ -183,6 +190,28 @@
           color: 'bg-blue-400'
         },
         {
+          id: 'murata',
+          name: '무라타',
+          style: BreathingStyle.WATER,
+          baseHp: 150,
+          baseAtk: 30,
+          price: 200,
+          description: '어디에나 있는 평범한 대원. 하지만 생존력은 최강.',
+          skill: {
+            name: '물의 호흡(흐릿함)',
+            damageMultiplier: 2.0,
+            cooldown: 3,
+            description: '형태가 보이지 않을 정도로 옅은 물의 호흡.'
+          },
+          awakenSkill: {
+            name: '기적의 생존',
+            damageMultiplier: 4.0,
+            cooldown: 15,
+            description: '엄청난 운으로 적의 급소를 찌르고 회피한다.'
+          },
+          color: 'bg-slate-500'
+        },
+        {
           id: 'aoi',
           name: '칸자키 아오이',
           style: BreathingStyle.WATER,
@@ -225,6 +254,28 @@
             description: '혈귀를 먹고 얻은 힘으로 나무 뿌리를 조종한다.'
           },
           color: 'bg-slate-600'
+        },
+        {
+          id: 'wives',
+          name: '우즈이의 아내들',
+          style: BreathingStyle.SOUND,
+          baseHp: 240,
+          baseAtk: 65,
+          price: 1100,
+          description: '스마, 마키오, 히나츠루 3인조 쿠노이치.',
+          skill: {
+            name: '쿠나이 난사',
+            damageMultiplier: 3.2,
+            cooldown: 4,
+            description: '독이 발린 쿠나이를 사방에서 던진다.'
+          },
+          awakenSkill: {
+            name: '지원 사격',
+            damageMultiplier: 6.0,
+            cooldown: 12,
+            description: '대규모 화약과 무기로 적을 포위 공격한다.'
+          },
+          color: 'bg-pink-600'
         },
         {
           id: 'kaigaku',
@@ -665,6 +716,28 @@
             description: '검을 붉게 물들여 재생을 봉쇄하고 벤다.'
           },
           color: 'bg-red-800'
+        },
+        {
+          id: 'dk_tanjiro',
+          name: '오니화 탄지로',
+          style: BreathingStyle.SUN,
+          baseHp: 1000,
+          baseAtk: 400,
+          price: 50000,
+          description: '태양을 극복한 오니의 왕. 해의 호흡과 혈귀술을 동시에 쓴다.',
+          skill: {
+            name: '혈귀술: 충격파',
+            damageMultiplier: 5.0,
+            cooldown: 5,
+            description: '등에서 촉수를 꺼내 충격파를 발사한다.'
+          },
+          awakenSkill: {
+            name: '태양 극복',
+            damageMultiplier: 20.0,
+            cooldown: 25,
+            description: '죽음을 초월한 일격으로 모든 것을 소멸시킨다.'
+          },
+          color: 'bg-rose-950'
         }
       ];
 
@@ -763,12 +836,12 @@
             name: '물의 일족',
             description: '물의 호흡 사용자 3명 이상 시 공격력/체력 15% 증가',
             condition: (ids) => {
-                const waterUsers = ['tanjiro', 'giyu', 'urokodaki', 'sabito', 'aoi'];
+                const waterUsers = ['tanjiro', 'giyu', 'urokodaki', 'sabito', 'aoi', 'murata'];
                 const count = ids.filter(id => waterUsers.includes(id)).length;
                 return count >= 3;
             },
             apply: (id, stats) => {
-                if (['tanjiro', 'giyu', 'urokodaki', 'sabito', 'aoi'].includes(id)) {
+                if (['tanjiro', 'giyu', 'urokodaki', 'sabito', 'aoi', 'murata'].includes(id)) {
                     return { atk: Math.floor(stats.atk * 1.15), maxHp: Math.floor(stats.maxHp * 1.15) };
                 }
                 return stats;
@@ -859,6 +932,15 @@
                 if(id === 'gyomei' || id === 'shinobu') return { ...stats, maxHp: Math.floor(stats.maxHp * 1.2) };
                 return stats;
             }
+        },
+        {
+            name: '우즈이 가문',
+            description: '텐겐과 우즈이의 아내들이 함께하면 공격력 25% 증가',
+            condition: (ids) => ids.includes('tengen') && ids.includes('wives'),
+            apply: (id, stats) => {
+                if(id === 'tengen' || id === 'wives') return { ...stats, atk: Math.floor(stats.atk * 1.25) };
+                return stats;
+            }
         }
       ];
 
@@ -907,7 +989,7 @@
 
       // --- APP ---
 
-      const SAVE_KEY = 'ds_rpg_save_v7';
+      const SAVE_KEY = 'ds_rpg_save_v8';
 
       // --- Helper Functions ---
       const getSynergies = (selectedIds) => {
@@ -981,21 +1063,21 @@
          return (
             <div className="flex flex-col h-full bg-slate-900">
                 {/* Header */}
-                <div className="p-4 bg-slate-800 border-b border-slate-700 flex justify-between items-center">
+                <div className="p-4 bg-slate-800 border-b border-slate-700 flex justify-between items-center shrink-0">
                     <button onClick={onBack} className="flex items-center gap-2 text-slate-300 hover:text-white">
                         <ChevronRight className="rotate-180"/> 뒤로가기
                     </button>
-                    <h1 className="text-xl font-cinzel text-white">대원 관리</h1>
+                    <h1 className="text-xl font-cinzel text-white hidden sm:block">대원 관리</h1>
                     <div className="flex gap-4 text-sm font-mono">
                         <span className="text-yellow-400">{player.gold.toLocaleString()} G</span>
                         <span className="text-red-400">{player.ironSand.toLocaleString()} 철</span>
                     </div>
                 </div>
 
-                <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
+                <div className="flex-1 flex flex-col md:flex-row overflow-hidden min-h-0">
                     {/* Left: List */}
-                    <div className="w-full md:w-1/3 bg-slate-900 border-r border-slate-800 flex flex-col">
-                        <div className="p-3 flex gap-2 border-b border-slate-800">
+                    <div className="w-full md:w-1/3 bg-slate-900 border-r border-slate-800 flex flex-col min-h-0 md:h-full">
+                        <div className="p-3 flex gap-2 border-b border-slate-800 shrink-0">
                             {['LEVEL', 'RANK', 'ATK'].map(m => (
                                 <button key={m} onClick={() => setSortMode(m)} className={`flex-1 text-[10px] py-1 rounded border ${sortMode === m ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-slate-800 border-slate-700 text-slate-500'}`}>
                                     {m === 'LEVEL' ? '레벨순' : m === 'RANK' ? '계급순' : '공격력순'}
@@ -1031,15 +1113,15 @@
 
                     {/* Right: Detail */}
                     {selectedSlayer ? (
-                        <div className="flex-1 bg-slate-900 p-6 overflow-y-auto custom-scrollbar flex flex-col gap-6">
+                        <div className="flex-1 bg-slate-900 p-6 overflow-y-auto custom-scrollbar flex flex-col gap-6 h-full">
                             {/* Top Profile */}
-                            <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
-                                <div className={`w-32 h-32 md:w-40 md:h-40 rounded-xl ${selectedSlayer.color} flex items-center justify-center text-6xl text-white shadow-[0_0_30px_rgba(255,255,255,0.1)] relative group`}>
+                            <div className="flex flex-col md:flex-row gap-6 items-center md:items-start shrink-0">
+                                <div className={`w-32 h-32 md:w-40 md:h-40 rounded-xl ${selectedSlayer.color} flex items-center justify-center text-6xl text-white shadow-[0_0_30px_rgba(255,255,255,0.1)] relative group shrink-0`}>
                                     {selectedSlayer.name[0]}
                                     {selectedSlayer.markLevel > 0 && <Flame className="absolute top-2 right-2 text-red-500 animate-pulse" size={24}/>}
                                 </div>
-                                <div className="flex-1 text-center md:text-left">
-                                    <h2 className="text-3xl font-bold text-white mb-1 flex items-center justify-center md:justify-start gap-2">
+                                <div className="flex-1 text-center md:text-left w-full">
+                                    <h2 className="text-3xl font-bold text-white mb-1 flex items-center justify-center md:justify-start gap-2 flex-wrap">
                                         {selectedSlayer.name} 
                                         <button onClick={() => onToggleSlayer(selectedSlayer.id)} className={`px-3 py-1 rounded-full text-xs border ${player.selectedSlayerIds.includes(selectedSlayer.id) ? 'bg-green-600 border-green-400 text-white' : 'bg-slate-700 border-slate-600 text-slate-400'}`}>
                                             {player.selectedSlayerIds.includes(selectedSlayer.id) ? '출전 중' : '휴식 중'}
@@ -1059,7 +1141,7 @@
                                         </div>
                                         <div>
                                             <div className="text-xs text-slate-500">치명타 확률</div>
-                                            <div className="text-lg font-bold text-yellow-400">{5 + weaponLv}%</div>
+                                            <div className="text-lg font-bold text-yellow-400">{5 + weaponLv + (player.trainingLevels?.meditation || 0)}%</div>
                                         </div>
                                         <div>
                                             <div className="text-xs text-slate-500">호흡 숙련도</div>
@@ -1070,7 +1152,7 @@
                             </div>
 
                             {/* Actions Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 shrink-0">
                                 {/* Level Up */}
                                 <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
                                     <div className="flex justify-between mb-2">
@@ -1134,7 +1216,7 @@
                             </div>
 
                             {/* Artifacts */}
-                            <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                            <div className="bg-slate-800 p-4 rounded-lg border border-slate-700 shrink-0 mb-6">
                                 <h3 className="font-bold text-slate-200 mb-3 flex justify-between items-center">
                                     <span>장착 유물</span>
                                     {equippedArtifact && <button onClick={() => onUnequipArtifact(selectedSlayer.id)} className="text-xs text-red-400 underline">해제</button>}
@@ -1153,7 +1235,7 @@
                                 
                                 <div className="mt-4">
                                     <div className="text-xs text-slate-400 mb-2">보유 유물 (클릭하여 장착)</div>
-                                    <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+                                    <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar min-h-[60px]">
                                         {player.inventory.filter(i => !player.ownedSlayers.some(s => s.equippedArtifactId === i.id)).map(item => (
                                             <button 
                                                 key={item.id}
@@ -1165,7 +1247,7 @@
                                             </button>
                                         ))}
                                         {player.inventory.filter(i => !player.ownedSlayers.some(s => s.equippedArtifactId === i.id)).length === 0 && (
-                                            <span className="text-xs text-slate-600 italic">장착 가능한 유물이 없습니다.</span>
+                                            <span className="text-xs text-slate-600 italic whitespace-nowrap">장착 가능한 유물이 없습니다.</span>
                                         )}
                                     </div>
                                 </div>
@@ -1194,9 +1276,10 @@
         onChangeDifficulty,
         onResetData,
         onBuyShopItem,
-        onOpenManagement
+        onOpenManagement,
+        onTrain
       }) => {
-        const [activeTab, setActiveTab] = useState('HQ'); // HQ, CASTLE, RAID, SHOP
+        const [activeTab, setActiveTab] = useState('HQ'); // HQ, CASTLE, RAID, SHOP, TRAINING
         const needsHeal = player.ownedSlayers.some(s => s.currentHp < s.maxHp);
         const selectedCount = player.selectedSlayerIds.length;
         const activeSynergies = getSynergies(player.selectedSlayerIds);
@@ -1217,9 +1300,9 @@
             <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-sm"></div>
             
             {/* Header */}
-            <div className="relative z-10 p-4 sm:p-6 flex justify-between items-start border-b border-slate-700 bg-slate-900/50">
+            <div className="relative z-10 p-4 sm:p-6 flex justify-between items-start border-b border-slate-700 bg-slate-900/50 shrink-0">
               <div>
-                <h1 className="text-xl sm:text-3xl font-cinzel text-indigo-100 drop-shadow-lg font-bold">우부야시키 저택</h1>
+                <h1 className="text-xl sm:text-3xl font-cinzel text-indigo-100 drop-shadow-lg font-bold">귀살대 본부</h1>
                 <p className="text-slate-400 text-xs sm:text-sm mt-1">
                   진행: <span className="text-yellow-400 font-bold">STAGE {player.stage}</span>
                 </p>
@@ -1255,9 +1338,12 @@
             </div>
 
             {/* Tab Navigation */}
-            <div className="relative z-10 flex gap-2 sm:gap-4 px-4 sm:px-6 pt-4 overflow-x-auto">
+            <div className="relative z-10 flex gap-2 sm:gap-4 px-4 sm:px-6 pt-4 overflow-x-auto shrink-0 custom-scrollbar pb-2">
                 <button onClick={() => setActiveTab('HQ')} className={`whitespace-nowrap px-4 py-2 rounded-t-lg font-bold transition-all flex gap-2 ${activeTab === 'HQ' ? 'bg-slate-800 text-white border-t border-x border-slate-600' : 'bg-slate-900/50 text-slate-500 hover:text-slate-300'}`}>
                     <Home size={18} /> 본부
+                </button>
+                <button onClick={() => setActiveTab('TRAINING')} className={`whitespace-nowrap px-4 py-2 rounded-t-lg font-bold transition-all flex gap-2 ${activeTab === 'TRAINING' ? 'bg-slate-800 text-white border-t border-x border-slate-600' : 'bg-slate-900/50 text-slate-500 hover:text-slate-300'}`}>
+                    <Dumbbell size={18} /> 주합 훈련
                 </button>
                 <button onClick={() => setActiveTab('CASTLE')} className={`whitespace-nowrap px-4 py-2 rounded-t-lg font-bold transition-all flex gap-2 ${activeTab === 'CASTLE' ? 'bg-slate-800 text-white border-t border-x border-slate-600' : 'bg-slate-900/50 text-slate-500 hover:text-slate-300'}`}>
                     <Mountain size={18} /> 무한성
@@ -1271,11 +1357,11 @@
             </div>
 
             {/* Main Content Area */}
-            <div className="relative z-10 flex-1 bg-slate-800/90 border-t border-slate-700 p-4 sm:p-6 overflow-hidden">
+            <div className="relative z-10 flex-1 bg-slate-800/90 border-t border-slate-700 p-4 sm:p-6 overflow-hidden min-h-0">
               
               {/* --- HQ TAB --- */}
               {activeTab === 'HQ' && (
-                  <div className="grid lg:grid-cols-2 gap-6 h-full overflow-y-auto pb-20">
+                  <div className="grid lg:grid-cols-2 gap-6 h-full overflow-y-auto pb-20 custom-scrollbar">
                     <div className="space-y-4">
                         <div className="bg-slate-900/50 rounded-xl p-6 border border-slate-700">
                         <h2 className="text-xl text-slate-200 mb-4 font-bold border-b border-slate-700 pb-2">작전 수행</h2>
@@ -1381,6 +1467,54 @@
                   </div>
               )}
 
+              {/* --- TRAINING TAB --- */}
+               {activeTab === 'TRAINING' && (
+                  <div className="h-full overflow-y-auto custom-scrollbar">
+                      <div className="mb-6 text-center">
+                          <h2 className="text-2xl font-cinzel text-amber-300 mb-1">주합 훈련</h2>
+                          <p className="text-slate-400 text-sm">전체 대원의 능력치를 영구적으로 강화합니다.</p>
+                      </div>
+                      
+                      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                        {TRAINING_TYPES.map(t => {
+                            const currentLv = player.trainingLevels?.[t.id] || 0;
+                            const cost = Math.floor(t.costBase * Math.pow(t.costScale, currentLv));
+                            const effectVal = Math.floor((currentLv * t.val) * 100);
+                            const canAfford = player.gold >= cost;
+                            
+                            return (
+                                <div key={t.id} className="bg-slate-900 border border-slate-700 p-6 rounded-xl flex flex-col items-center text-center hover:border-amber-700 transition-colors">
+                                    <div className="w-16 h-16 bg-amber-900/30 rounded-full flex items-center justify-center text-amber-500 mb-4 border border-amber-500/30">
+                                        {t.icon}
+                                    </div>
+                                    <h3 className="text-lg font-bold text-slate-200">{t.name}</h3>
+                                    <p className="text-xs text-slate-500 mb-4">{t.desc}</p>
+                                    
+                                    <div className="w-full bg-slate-800 rounded p-2 mb-4">
+                                        <div className="flex justify-between text-sm mb-1">
+                                            <span className="text-slate-400">현재 레벨</span>
+                                            <span className="font-bold text-white">Lv.{currentLv}</span>
+                                        </div>
+                                        <div className="flex justify-between text-sm">
+                                            <span className="text-slate-400">효과</span>
+                                            <span className="font-bold text-green-400">+{effectVal}%</span>
+                                        </div>
+                                    </div>
+
+                                    <button 
+                                        onClick={() => onTrain(t.id)}
+                                        disabled={!canAfford}
+                                        className={`w-full py-2 rounded font-bold text-sm ${canAfford ? 'bg-amber-700 hover:bg-amber-600 text-white' : 'bg-slate-800 text-slate-500 cursor-not-allowed'}`}
+                                    >
+                                        훈련하기 ({cost.toLocaleString()} G)
+                                    </button>
+                                </div>
+                            )
+                        })}
+                      </div>
+                  </div>
+              )}
+
               {/* --- INFINITY CASTLE TAB --- */}
               {activeTab === 'CASTLE' && (
                   <div className="h-full flex flex-col items-center justify-center text-center max-w-2xl mx-auto">
@@ -1449,7 +1583,7 @@
 
              {/* --- SHOP TAB --- */}
               {activeTab === 'SHOP' && (
-                  <div className="h-full flex flex-col max-w-4xl mx-auto">
+                  <div className="h-full flex flex-col max-w-4xl mx-auto overflow-y-auto custom-scrollbar">
                       <div className="mb-6 text-center">
                           <h2 className="text-2xl font-cinzel text-blue-300 mb-1">피안화 교환소</h2>
                           <p className="text-slate-400 text-sm">희귀한 재화를 교환하거나 암시장을 이용할 수 있습니다.</p>
@@ -1527,9 +1661,30 @@
         const [effects, setEffects] = useState([]);
         const [enemySkillEffect, setEnemySkillEffect] = useState(null);
         const [showStats, setShowStats] = useState(false);
+        const [isAuto, setIsAuto] = useState(false);
         
         const party = player.ownedSlayers.filter(s => player.selectedSlayerIds.includes(s.id));
         const synergies = getSynergies(player.selectedSlayerIds);
+
+        // Auto Battle Logic
+        useEffect(() => {
+            if (!isAuto || !enemy || enemy.currentHp <= 0) return;
+            const interval = setInterval(() => {
+                party.forEach(s => {
+                    const now = Date.now();
+                    const isDead = s.currentHp <= 0;
+                    if (isDead) return;
+
+                    // Try Ultimate
+                    if (s.level >= 5 && now >= s.awakenSkillReadyAt) {
+                         onAwakenSkillUse(s.id);
+                    } else if (now >= s.skillReadyAt) {
+                        onSkillUse(s.id);
+                    }
+                });
+            }, 500);
+            return () => clearInterval(interval);
+        }, [isAuto, party, enemy]);
 
         useEffect(() => {
           logEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -1603,7 +1758,7 @@
             </div>
 
             {/* Header Info */}
-            <div className="p-4 bg-black/60 backdrop-blur-md border-b border-red-900/30 flex justify-center items-center z-10 relative flex-col">
+            <div className="p-4 bg-black/60 backdrop-blur-md border-b border-red-900/30 flex justify-center items-center z-10 relative flex-col shrink-0">
               <div className="w-full max-w-2xl text-center">
                  {mode === 'CASTLE' && <div className="text-purple-400 font-bold mb-1">무한성 {floor}층</div>}
                  {mode === 'RAID' && <div className="text-red-500 font-bold mb-1 animate-pulse">레이드 진행 중 (Total Dmg: {raidScore.toLocaleString()})</div>}
@@ -1615,8 +1770,11 @@
               </div>
             </div>
 
-            {/* Stats Overlay Button */}
-             <div className="absolute top-4 right-4 z-50">
+            {/* Buttons Overlay */}
+             <div className="absolute top-4 right-4 z-50 flex gap-2">
+                <button onClick={() => setIsAuto(!isAuto)} className={`p-2 rounded border font-bold flex items-center gap-2 ${isAuto ? 'bg-green-600 border-green-400 text-white animate-pulse' : 'bg-slate-800 border-slate-600 text-slate-400'}`}>
+                    {isAuto ? <PauseCircle size={20}/> : <PlayCircle size={20}/>} AUTO
+                </button>
                 <button onClick={() => setShowStats(!showStats)} className="bg-black/50 p-2 rounded text-slate-300 hover:text-white border border-slate-700">
                     <BarChart2 size={20}/>
                 </button>
@@ -1651,7 +1809,7 @@
              )}
 
             {/* Center Visuals */}
-            <div className="flex-1 flex flex-col items-center justify-center relative p-4 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900 to-black">
+            <div className="flex-1 flex flex-col items-center justify-center relative p-4 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900 to-black min-h-0">
               <div className={`transition-all duration-300 transform ${enemy.currentHp <= 0 ? 'scale-90 opacity-0 blur-xl' : 'scale-100 opacity-100'}`}>
                 <div className={`w-48 h-48 md:w-64 md:h-64 rounded-full bg-black border-4 ${enemy.isBoss ? 'border-red-600 shadow-[0_0_50px_rgba(220,38,38,0.4)]' : 'border-slate-600'} flex items-center justify-center relative overflow-hidden`}>
                   <Skull size={100} className={`${enemy.imageColor} animate-pulse relative z-10`} />
@@ -1670,10 +1828,10 @@
             </div>
 
             {/* Bottom Controls */}
-            <div className="bg-slate-900 border-t border-slate-800 p-4 pb-8 z-10">
+            <div className="bg-slate-900 border-t border-slate-800 p-4 pb-8 z-10 shrink-0">
               <div className="max-w-5xl mx-auto">
                 
-                <div className="h-20 overflow-y-auto mb-4 bg-black/40 rounded p-2 text-xs font-mono text-slate-400 border border-slate-800/50">
+                <div className="h-20 overflow-y-auto mb-4 bg-black/40 rounded p-2 text-xs font-mono text-slate-400 border border-slate-800/50 custom-scrollbar">
                   {battleLog.map((log, i) => (
                     <div key={i} className={`mb-1 ${log.includes('혈귀술') ? 'text-red-400 font-bold' : ''}`}>{log}</div>
                   ))}
@@ -1787,7 +1945,7 @@
       }) => {
         return (
           <div className="flex flex-col h-full bg-slate-900">
-            <div className="p-4 border-b border-slate-700 bg-slate-800 flex items-center justify-between">
+            <div className="p-4 border-b border-slate-700 bg-slate-800 flex items-center justify-between shrink-0">
               <button onClick={onBack} className="flex items-center text-slate-300 hover:text-white">
                 <ChevronRight className="rotate-180" /> 돌아가기
               </button>
@@ -1795,7 +1953,7 @@
               <div className="text-yellow-400 font-mono">{player.gold.toLocaleString()} G</div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 grid grid-cols-1 md:grid-cols-2 gap-4 pb-20">
+            <div className="flex-1 overflow-y-auto p-4 grid grid-cols-1 md:grid-cols-2 gap-4 pb-20 custom-scrollbar min-h-0">
               {SLAYERS_DATA.map(slayer => {
                 const isOwned = player.ownedSlayers.some(s => s.id === slayer.id);
                 const canAfford = player.gold >= slayer.price;
@@ -1859,7 +2017,8 @@
                   infinityCastleRecord: parsed.infinityCastleRecord ?? 0,
                   ownedSlayers: parsed.ownedSlayers ?? [],
                   selectedSlayerIds: parsed.selectedSlayerIds ?? [],
-                  inventory: parsed.inventory ?? []
+                  inventory: parsed.inventory ?? [],
+                  trainingLevels: parsed.trainingLevels ?? {}
               };
             }
           } catch (err) {
@@ -1874,7 +2033,8 @@
             infinityCastleRecord: 0,
             ownedSlayers: [],
             selectedSlayerIds: [],
-            inventory: []
+            inventory: [],
+            trainingLevels: {}
           };
         });
         
@@ -1919,7 +2079,8 @@
                     infinityCastleRecord: 0,
                     ownedSlayers: [],
                     selectedSlayerIds: [],
-                    inventory: []
+                    inventory: [],
+                    trainingLevels: {}
                 });
                 window.location.reload();
             }
@@ -2090,6 +2251,27 @@
             }));
         };
 
+        const trainHashira = (trainingId) => {
+            setPlayer(prev => {
+                const training = TRAINING_TYPES.find(t => t.id === trainingId);
+                if (!training) return prev;
+                
+                const currentLv = prev.trainingLevels?.[trainingId] || 0;
+                const cost = Math.floor(training.costBase * Math.pow(training.costScale, currentLv));
+
+                if (prev.gold < cost) return prev;
+
+                return {
+                    ...prev,
+                    gold: prev.gold - cost,
+                    trainingLevels: {
+                        ...prev.trainingLevels,
+                        [trainingId]: currentLv + 1
+                    }
+                };
+            });
+        };
+
         // --- BATTLE STARTERS ---
 
         const resetCooldowns = (slayers) => {
@@ -2213,10 +2395,17 @@
              if (mod.atk !== 100) multiplier *= (mod.atk / 100);
           });
 
+          // Apply Training Bonuses
+          const trainingAtkBonus = (player.trainingLevels?.swing || 0) * 0.03;
+          multiplier += trainingAtkBonus;
+
           // Apply Weapon Stats
           const weaponLv = slayer.weaponLevel || 0;
           let critRate = 0.05 + (weaponLv * 0.01); // 5% + 1%/lv
           let critDmgMult = 1.5 + (weaponLv * 0.05); // 150% + 5%/lv
+
+          // Apply Training Crit Bonus
+          critRate += (player.trainingLevels?.meditation || 0) * 0.01;
 
           // Apply Artifact Stats
           const artifact = player.inventory.find(i => i.id === slayer.equippedArtifactId);
@@ -2487,7 +2676,8 @@
                 ownedSlayers: prev.ownedSlayers.map(s => {
                     if (target && s.id === target.id) {
                         // Apply defense logic
-                        const finalIncoming = Math.max(1, enemyDmg - Math.floor(s.level * (s.rankIdx ? s.rankIdx+1 : 1))); 
+                        const defense = Math.floor(s.level * (s.rankIdx ? s.rankIdx+1 : 1));
+                        const finalIncoming = Math.max(1, enemyDmg - defense); 
                         return { ...s, currentHp: Math.max(0, s.currentHp - finalIncoming) };
                     }
                     return s;
@@ -2532,6 +2722,7 @@
               onChangeDifficulty={changeDifficulty}
               onResetData={resetGameData}
               onBuyShopItem={buyShopItem}
+              onTrain={trainHashira}
             />
           );
         }
