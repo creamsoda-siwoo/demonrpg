@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>귀멸의 칼날: 귀살대 키우기 (Ver 13.0)</title>
+    <title>귀멸의 칼날: 귀살대 키우기 (Ver 14.0)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
@@ -103,7 +103,7 @@
         MOON: '달의 호흡',
         FLOWER: '꽃의 호흡',
         BLOOD: '혈귀술',
-        NONE: '호흡 없음 (특수)'
+        NONE: '호흡 없음 (무술/특수)'
       };
 
       const RANKS = [
@@ -145,6 +145,50 @@
             isUltimate: true
           },
           color: 'bg-emerald-600'
+        },
+        {
+          id: 'michikatsu',
+          name: '츠기쿠니 미치카츠',
+          style: BreathingStyle.MOON,
+          baseHp: 650,
+          baseAtk: 250,
+          price: 18000,
+          description: '요리이치의 형이자 달의 호흡 창시자. (인간 시절)',
+          skill: {
+            name: '달의 호흡: 제1형 암월·전궁',
+            damageMultiplier: 6.0,
+            cooldown: 6,
+            description: '발도와 동시에 수많은 초승달 칼날을 날린다.'
+          },
+          awakenSkill: {
+            name: '제16형: 월홍·반월',
+            damageMultiplier: 10.0,
+            cooldown: 14,
+            description: '하늘에서 거대한 달의 참격을 떨어뜨린다.'
+          },
+          color: 'bg-purple-900'
+        },
+        {
+          id: 'hakuji',
+          name: '하쿠지',
+          style: BreathingStyle.NONE,
+          baseHp: 500,
+          baseAtk: 200,
+          price: 15000,
+          description: '오니가 되기 전의 아카자. 소류 무술의 달인.',
+          skill: {
+            name: '파괴살: 나침',
+            damageMultiplier: 5.5,
+            cooldown: 5,
+            description: '투기를 감지하여 치명타 확률을 높여 타격한다.'
+          },
+          awakenSkill: {
+            name: '청은난류광',
+            damageMultiplier: 9.0,
+            cooldown: 12,
+            description: '백 발의 난타를 동시에 꽂아넣는다.'
+          },
+          color: 'bg-pink-700'
         },
         {
           id: 'sumiyoshi',
@@ -189,6 +233,28 @@
             description: '모두를 지키겠다는 일념으로 한계를 초월한다.'
           },
           color: 'bg-orange-400'
+        },
+        {
+          id: 'shinjuro',
+          name: '렌고쿠 신쥬로',
+          style: BreathingStyle.FLAME,
+          baseHp: 420,
+          baseAtk: 130,
+          price: 4800,
+          description: '전 염주이자 쿄쥬로의 아버지. 과거에는 열정적이었다.',
+          skill: {
+            name: '제4형: 성염의 파도',
+            damageMultiplier: 4.5,
+            cooldown: 6,
+            description: '소용돌이치는 화염으로 방어와 공격을 동시에 한다.'
+          },
+          awakenSkill: {
+            name: '염주의 품격',
+            damageMultiplier: 8.5,
+            cooldown: 13,
+            description: '녹슨 검술을 다시 불태워 강력한 일격을 날린다.'
+          },
+          color: 'bg-red-800'
         },
         {
           id: 'kotetsu',
@@ -823,9 +889,11 @@
         { name: '하현 1: 엔무', maxHp: 1200, atk: 100, rewardGold: 1200, isBoss: true, imageColor: 'text-indigo-500', skillProb: 0.2, skillName: '강제 혼수 최면', skillDmgMult: 0.5 }, 
 
         // 상현 (Upper Moons) - Bottom Up
+        { name: '신 상현 6: 카이가쿠', maxHp: 2000, atk: 160, rewardGold: 2500, isBoss: true, imageColor: 'text-neutral-500', skillProb: 0.3, skillName: '검은 번개', skillDmgMult: 2.1 },
         { name: '상현 6: 다키 & 규타로', maxHp: 2500, atk: 180, rewardGold: 3000, isBoss: true, imageColor: 'text-lime-500', skillProb: 0.3, skillName: '피의 참격', skillDmgMult: 2.2 },
         { name: '상현 5: 굣코', maxHp: 4000, atk: 250, rewardGold: 5000, isBoss: true, imageColor: 'text-purple-300', skillProb: 0.3, skillName: '수옥발', skillDmgMult: 2.5 },
         { name: '상현 4: 한텐구', maxHp: 6500, atk: 350, rewardGold: 7000, isBoss: true, imageColor: 'text-yellow-700', skillProb: 0.3, skillName: '목룡', skillDmgMult: 2.8 },
+        { name: '신 상현 4: 나키메', maxHp: 8000, atk: 400, rewardGold: 9000, isBoss: true, imageColor: 'text-slate-600', skillProb: 0.35, skillName: '공간 조작', skillDmgMult: 0.8 },
         { name: '상현 3: 아카자', maxHp: 12000, atk: 600, rewardGold: 12000, isBoss: true, imageColor: 'text-pink-600', skillProb: 0.35, skillName: '파괴살: 나침', skillDmgMult: 3.0 },
         { name: '상현 2: 도우마', maxHp: 16000, atk: 800, rewardGold: 20000, isBoss: true, imageColor: 'text-cyan-300', skillProb: 0.35, skillName: '무빙 연꽃', skillDmgMult: 3.5 },
         { name: '상현 1: 코쿠시보', maxHp: 25000, atk: 1500, rewardGold: 40000, isBoss: true, imageColor: 'text-purple-900', skillProb: 0.4, skillName: '달의 호흡', skillDmgMult: 4.0 },
@@ -968,11 +1036,11 @@
             name: '해의 계승',
             description: '요리이치, 탄지로, 스미요시 중 2명 이상 시 공격력 40% 증가',
             condition: (ids) => {
-                const sunUsers = ['yoriichi', 'tanjiro', 'sumiyoshi'];
+                const sunUsers = ['yoriichi', 'tanjiro', 'sumiyoshi', 'michikatsu'];
                 return ids.filter(id => sunUsers.includes(id)).length >= 2;
             },
             apply: (id, stats) => {
-                if(['yoriichi', 'tanjiro', 'sumiyoshi'].includes(id)) return { ...stats, atk: Math.floor(stats.atk * 1.4) };
+                if(['yoriichi', 'tanjiro', 'sumiyoshi', 'michikatsu'].includes(id)) return { ...stats, atk: Math.floor(stats.atk * 1.4) };
                 return stats;
             }
         },
@@ -1011,6 +1079,15 @@
                 if(id === 'tengen' || id === 'wives') return { ...stats, atk: Math.floor(stats.atk * 1.25) };
                 return stats;
             }
+        },
+        {
+            name: '츠기쿠니 형제',
+            description: '요리이치와 미치카츠가 함께하면 치명타 피해 50% 증가',
+            condition: (ids) => ids.includes('yoriichi') && ids.includes('michikatsu'),
+            apply: (id, stats) => {
+                if(id === 'yoriichi' || id === 'michikatsu') return { ...stats, atk: Math.floor(stats.atk * 1.1) }; // 구현상 atk로 퉁침
+                return stats;
+            }
         }
       ];
 
@@ -1037,7 +1114,13 @@
         { name: '요리이치 영식의 팔', type: 'cooldown', val: 0.25, desc: '쿨타임 감소 25% (전설급)' },
         { name: '우즈이의 보석 머리띠', type: 'crit_rate', val: 0.2, desc: '치명타 확률 +20% (영웅급)' },
         { name: '하가네즈카의 부러진 칼', type: 'crit_dmg', val: 0.8, desc: '치명타 피해 +80% (전설급)' },
-        { name: '차차마루의 방울', type: 'stat_boost', stat: 'maxHp', val: 0.3, desc: '체력 +30% (영웅급)' }
+        { name: '차차마루의 방울', type: 'stat_boost', stat: 'maxHp', val: 0.3, desc: '체력 +30% (영웅급)' },
+        // New Artifacts Ver 14.0
+        { name: '코쿠시보의 기모노 조각', type: 'crit_rate', val: 0.3, desc: '치명타 확률 +30% (전설급)' },
+        { name: '아카자의 염주', type: 'stat_boost', stat: 'atk', val: 0.25, desc: '공격력 +25% (영웅급)' },
+        { name: '도우마의 황금 부채', type: 'crit_dmg', val: 1.0, desc: '치명타 피해 +100% (전설급)' },
+        { name: '나키메의 비파 채', type: 'cooldown', val: 0.2, desc: '쿨타임 감소 20% (영웅급)' },
+        { name: '굣코의 항아리', type: 'stat_boost', stat: 'maxHp', val: 0.4, desc: '체력 +40% (영웅급)' }
       ];
 
       // --- COMPONENTS ---
@@ -1065,7 +1148,7 @@
 
       // --- APP ---
 
-      const SAVE_KEY = 'ds_rpg_save_v13';
+      const SAVE_KEY = 'ds_rpg_save_v14';
 
       // --- Helper Functions ---
       const getSynergies = (selectedIds) => {
@@ -1428,7 +1511,7 @@
             {/* Header */}
             <div className="relative z-10 p-4 sm:p-6 flex justify-between items-start border-b border-slate-700 bg-slate-900/50 shrink-0">
               <div>
-                <h1 className="text-xl sm:text-3xl font-cinzel text-indigo-100 drop-shadow-lg font-bold">귀살대 본부 (Ver 13.0)</h1>
+                <h1 className="text-xl sm:text-3xl font-cinzel text-indigo-100 drop-shadow-lg font-bold">귀살대 본부 (Ver 14.0)</h1>
                 <p className="text-slate-400 text-xs sm:text-sm mt-1">
                   진행: <span className="text-yellow-400 font-bold">STAGE {player.stage}</span>
                 </p>
@@ -1437,11 +1520,11 @@
                 <div className="flex gap-2">
                     <div className="bg-slate-800 px-3 py-1 rounded-full border border-yellow-600/50 flex items-center gap-2 text-yellow-400 shadow-lg">
                         <span className="text-sm sm:text-xl font-bold">{player.gold.toLocaleString()}</span>
-                        <span className="text-[10px] sm:text-xs uppercase tracking-wider">Gold</span>
+                        <span className="text-xs uppercase tracking-wider">Gold</span>
                     </div>
                     <div className="bg-slate-800 px-3 py-1 rounded-full border border-red-600/50 flex items-center gap-2 text-red-400 shadow-lg">
                         <span className="text-sm sm:text-xl font-bold">{player.ironSand.toLocaleString()}</span>
-                        <span className="text-[10px] sm:text-xs tracking-wider">성성철</span>
+                        <span className="text-xs tracking-wider">성성철</span>
                     </div>
                 </div>
                 
