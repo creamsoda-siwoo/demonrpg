@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>귀멸의 칼날: 귀살대 키우기</title>
+    <title>귀멸의 칼날: 귀살대 키우기 (Ver 13.0)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
@@ -71,8 +71,8 @@
     "react": "https://esm.sh/react@18.2.0",
     "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
     "lucide-react": "https://esm.sh/lucide-react@0.292.0?external=react",
-    "react/": "https://aistudiocdn.com/react@^19.2.1/",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/"
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/"
   }
 }
 </script>
@@ -111,7 +111,8 @@
         { id: 1, name: '계급: 경 (Kanoe)', minLv: 10, multiplier: 1.5, cost: 2000 },
         { id: 2, name: '계급: 병 (Hinoe)', minLv: 30, multiplier: 2.5, cost: 10000 },
         { id: 3, name: '계급: 갑 (Kinoe)', minLv: 50, multiplier: 4.0, cost: 50000 },
-        { id: 4, name: '주 (Hashira)', minLv: 80, multiplier: 7.0, cost: 200000 }
+        { id: 4, name: '주 (Hashira)', minLv: 80, multiplier: 7.0, cost: 200000 },
+        { id: 5, name: '계승자 (Tsuguko)', minLv: 100, multiplier: 10.0, cost: 1000000 }
       ];
 
       const TRAINING_TYPES = [
@@ -144,6 +145,72 @@
             isUltimate: true
           },
           color: 'bg-emerald-600'
+        },
+        {
+          id: 'sumiyoshi',
+          name: '스미요시',
+          style: BreathingStyle.SUN,
+          baseHp: 200,
+          baseAtk: 50,
+          price: 5000,
+          description: '요리이치의 검무를 눈에 새긴 카마도 가문의 조상.',
+          skill: {
+            name: '약속의 기억',
+            damageMultiplier: 3.5,
+            cooldown: 5,
+            description: '요리이치와의 약속을 떠올리며 힘을 낸다.'
+          },
+          awakenSkill: {
+            name: '해의 호흡: 12형의 춤',
+            damageMultiplier: 8.0,
+            cooldown: 14,
+            description: '밤새도록 멈추지 않고 춤을 춘다.'
+          },
+          color: 'bg-amber-700'
+        },
+        {
+          id: 'sabito_spirit',
+          name: '사비토 (영혼)',
+          style: BreathingStyle.WATER,
+          baseHp: 220,
+          baseAtk: 70,
+          price: 4500,
+          description: '가면이 깨진 진정한 모습의 사비토.',
+          skill: {
+            name: '쾌도난마',
+            damageMultiplier: 4.0,
+            cooldown: 5,
+            description: '망설임 없는 검격으로 적을 벤다.'
+          },
+          awakenSkill: {
+            name: '진정한 용기',
+            damageMultiplier: 7.5,
+            cooldown: 11,
+            description: '모두를 지키겠다는 일념으로 한계를 초월한다.'
+          },
+          color: 'bg-orange-400'
+        },
+        {
+          id: 'kotetsu',
+          name: '코테츠',
+          style: BreathingStyle.NONE,
+          baseHp: 150,
+          baseAtk: 30,
+          price: 3000,
+          description: '대장장이 마을의 어린 장인. 분석력이 뛰어나다.',
+          skill: {
+            name: '약점 분석',
+            damageMultiplier: 2.0,
+            cooldown: 6,
+            description: '적의 구조를 파악하여 치명타 확률을 높인다.'
+          },
+          awakenSkill: {
+            name: '기관 장치 가동',
+            damageMultiplier: 5.0,
+            cooldown: 15,
+            description: '전투용 꼭두각시를 조종하여 공격한다.'
+          },
+          color: 'bg-stone-500'
         },
         {
           id: 'zenitsu',
@@ -899,10 +966,13 @@
         },
         {
             name: '해의 계승',
-            description: '요리이치와 탄지로가 함께하면 공격력 40% 증가',
-            condition: (ids) => ids.includes('yoriichi') && ids.includes('tanjiro'),
+            description: '요리이치, 탄지로, 스미요시 중 2명 이상 시 공격력 40% 증가',
+            condition: (ids) => {
+                const sunUsers = ['yoriichi', 'tanjiro', 'sumiyoshi'];
+                return ids.filter(id => sunUsers.includes(id)).length >= 2;
+            },
             apply: (id, stats) => {
-                if(id === 'yoriichi' || id === 'tanjiro') return { ...stats, atk: Math.floor(stats.atk * 1.4) };
+                if(['yoriichi', 'tanjiro', 'sumiyoshi'].includes(id)) return { ...stats, atk: Math.floor(stats.atk * 1.4) };
                 return stats;
             }
         },
@@ -959,7 +1029,15 @@
         { name: '시노부의 약병', type: 'leech', val: 0.05, desc: '타격 시 5% 흡혈' },
         { name: '우로코다키의 텐구 가면', type: 'cooldown', val: 0.1, desc: '쿨타임 감소 10%' },
         { name: '하가네즈카의 숫돌', type: 'stat_boost', stat: 'atk', val: 0.2, desc: '공격력 +20%' },
-        { name: '요리이치의 피리', type: 'stat_boost', stat: 'atk', val: 0.3, desc: '공격력 +30% (전설급)' }
+        { name: '요리이치의 피리', type: 'stat_boost', stat: 'atk', val: 0.3, desc: '공격력 +30% (전설급)' },
+        // New Artifacts Ver 13.0
+        { name: '무잔의 혈액 샘플', type: 'stat_boost', stat: 'atk', val: 0.4, desc: '공격력 +40% (전설급)' },
+        { name: '푸른 피안화 잎사귀', type: 'stat_boost', stat: 'maxHp', val: 0.5, desc: '체력 +50% (전설급)' },
+        { name: '목 없는 귀신 투구', type: 'leech', val: 0.15, desc: '타격 시 15% 흡혈 (전설급)' },
+        { name: '요리이치 영식의 팔', type: 'cooldown', val: 0.25, desc: '쿨타임 감소 25% (전설급)' },
+        { name: '우즈이의 보석 머리띠', type: 'crit_rate', val: 0.2, desc: '치명타 확률 +20% (영웅급)' },
+        { name: '하가네즈카의 부러진 칼', type: 'crit_dmg', val: 0.8, desc: '치명타 피해 +80% (전설급)' },
+        { name: '차차마루의 방울', type: 'stat_boost', stat: 'maxHp', val: 0.3, desc: '체력 +30% (영웅급)' }
       ];
 
       // --- COMPONENTS ---
@@ -987,7 +1065,7 @@
 
       // --- APP ---
 
-      const SAVE_KEY = 'ds_rpg_save_v8';
+      const SAVE_KEY = 'ds_rpg_save_v13';
 
       // --- Helper Functions ---
       const getSynergies = (selectedIds) => {
@@ -1026,6 +1104,7 @@
       }) => {
          const [selectedSlayerId, setSelectedSlayerId] = useState(player.ownedSlayers[0]?.id);
          const [sortMode, setSortMode] = useState('LEVEL'); // LEVEL, RANK, ATK
+         const [activeTab, setActiveTab] = useState('STATUS'); // STATUS, SKILL, EQUIP
 
          const selectedSlayer = player.ownedSlayers.find(s => s.id === selectedSlayerId);
          const equippedArtifact = selectedSlayer ? player.inventory.find(i => i.id === selectedSlayer.equippedArtifactId) : null;
@@ -1104,106 +1183,201 @@
 
                     {/* Right: Detail */}
                     {selectedSlayer ? (
-                        <div className="flex-1 bg-slate-900 p-6 overflow-y-auto custom-scrollbar flex flex-col gap-6 h-2/3 md:h-full min-h-0">
-                            {/* Top Profile */}
-                            <div className="flex flex-col md:flex-row gap-6 items-center md:items-start shrink-0">
-                                <div className={`w-32 h-32 md:w-40 md:h-40 rounded-xl ${selectedSlayer.color} flex items-center justify-center text-6xl text-white shadow-[0_0_30px_rgba(255,255,255,0.1)] relative group shrink-0`}>
-                                    {selectedSlayer.name[0]}
-                                    {selectedSlayer.markLevel > 0 && <Flame className="absolute top-2 right-2 text-red-500 animate-pulse" size={24}/>}
-                                </div>
-                                <div className="flex-1 text-center md:text-left w-full">
-                                    <h2 className="text-3xl font-bold text-white mb-1 flex items-center justify-center md:justify-start gap-2 flex-wrap">
-                                        {selectedSlayer.name} 
-                                        <button onClick={() => onToggleSlayer(selectedSlayer.id)} className={`px-3 py-1 rounded-full text-xs border ${player.selectedSlayerIds.includes(selectedSlayer.id) ? 'bg-green-600 border-green-400 text-white' : 'bg-slate-700 border-slate-600 text-slate-400'}`}>
-                                            {player.selectedSlayerIds.includes(selectedSlayer.id) ? '출전 중' : '휴식 중'}
-                                        </button>
-                                    </h2>
-                                    <p className="text-indigo-400 mb-2">{currentRank?.name || '계급 없음'}</p>
-                                    <p className="text-slate-400 text-sm mb-4">{selectedSlayer.description}</p>
-                                    
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-800/50 p-4 rounded-lg border border-slate-700">
-                                        <div>
-                                            <div className="text-xs text-slate-500">체력</div>
-                                            <div className="text-lg font-bold text-green-400">{selectedSlayer.maxHp.toLocaleString()}</div>
-                                        </div>
-                                        <div>
-                                            <div className="text-xs text-slate-500">공격력</div>
-                                            <div className="text-lg font-bold text-red-400">{selectedSlayer.atk.toLocaleString()}</div>
-                                        </div>
-                                        <div>
-                                            <div className="text-xs text-slate-500">치명타 확률</div>
-                                            <div className="text-lg font-bold text-yellow-400">{5 + weaponLv + (player.trainingLevels?.meditation || 0)}%</div>
-                                        </div>
-                                        <div>
-                                            <div className="text-xs text-slate-500">호흡 숙련도</div>
-                                            <div className="text-lg font-bold text-blue-400">{selectedSlayer.mastery || 0}</div>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div className="flex-1 bg-slate-900 p-0 flex flex-col h-2/3 md:h-full min-h-0">
+                            {/* Tabs */}
+                            <div className="flex border-b border-slate-700 bg-slate-800/50">
+                                {['STATUS', 'SKILL', 'EQUIP'].map(tab => (
+                                    <button 
+                                        key={tab}
+                                        onClick={() => setActiveTab(tab)}
+                                        className={`flex-1 py-3 text-sm font-bold border-b-2 transition-colors ${activeTab === tab ? 'border-indigo-500 text-white bg-indigo-900/20' : 'border-transparent text-slate-500 hover:text-slate-300'}`}
+                                    >
+                                        {tab === 'STATUS' ? '능력치' : tab === 'SKILL' ? '기술' : '장비'}
+                                    </button>
+                                ))}
                             </div>
 
-                            {/* Actions Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 shrink-0 pb-10">
-                                {/* Level Up */}
-                                <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
-                                    <div className="flex justify-between mb-2">
-                                        <span className="font-bold text-slate-200">레벨 강화</span>
-                                        <span className="text-xs text-yellow-500">{upgradeCost.toLocaleString()} G</span>
+                            <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
+                                {/* Top Profile Always Visible */}
+                                <div className="flex flex-col md:flex-row gap-6 items-center md:items-start shrink-0 mb-6">
+                                    <div className={`w-24 h-24 md:w-32 md:h-32 rounded-xl ${selectedSlayer.color} flex items-center justify-center text-5xl text-white shadow-[0_0_30px_rgba(255,255,255,0.1)] relative group shrink-0`}>
+                                        {selectedSlayer.name[0]}
+                                        {selectedSlayer.markLevel > 0 && <Flame className="absolute top-1 right-1 text-red-500 animate-pulse" size={20}/>}
                                     </div>
-                                    <button 
-                                        onClick={() => onUpgrade(selectedSlayer.id)}
-                                        disabled={!canUpgrade}
-                                        className={`w-full py-2 rounded font-bold text-sm ${canUpgrade ? 'bg-amber-600 hover:bg-amber-500 text-white' : 'bg-slate-700 text-slate-500'}`}
-                                    >
-                                        Lv.{selectedSlayer.level} → Lv.{selectedSlayer.level + 1}
-                                    </button>
+                                    <div className="flex-1 text-center md:text-left w-full">
+                                        <h2 className="text-2xl font-bold text-white mb-1 flex items-center justify-center md:justify-start gap-2 flex-wrap">
+                                            {selectedSlayer.name} 
+                                            <button onClick={() => onToggleSlayer(selectedSlayer.id)} className={`px-3 py-1 rounded-full text-xs border ${player.selectedSlayerIds.includes(selectedSlayer.id) ? 'bg-green-600 border-green-400 text-white' : 'bg-slate-700 border-slate-600 text-slate-400'}`}>
+                                                {player.selectedSlayerIds.includes(selectedSlayer.id) ? '출전 중' : '휴식 중'}
+                                            </button>
+                                        </h2>
+                                        <p className="text-indigo-400 mb-1">{currentRank?.name || '계급 없음'}</p>
+                                    </div>
                                 </div>
 
-                                {/* Rank Up */}
-                                <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
-                                    <div className="flex justify-between mb-2">
-                                        <span className="font-bold text-slate-200">승급 심사</span>
-                                        {nextRank ? <span className="text-xs text-purple-400">{nextRank.cost.toLocaleString()} G (Lv.{nextRank.minLv})</span> : <span className="text-xs text-slate-500">최고 계급</span>}
-                                    </div>
-                                    <button 
-                                        onClick={() => onPromote(selectedSlayer.id)}
-                                        disabled={!canPromote}
-                                        className={`w-full py-2 rounded font-bold text-sm ${canPromote ? 'bg-purple-600 hover:bg-purple-500 text-white' : 'bg-slate-700 text-slate-500'}`}
-                                    >
-                                        {nextRank ? `${nextRank.name} 승급` : '승급 불가'}
-                                    </button>
-                                </div>
+                                {/* Tab Content */}
+                                {activeTab === 'STATUS' && (
+                                    <div className="space-y-6">
+                                         <div className="grid grid-cols-2 gap-4 bg-slate-800/50 p-4 rounded-lg border border-slate-700">
+                                            <div>
+                                                <div className="text-xs text-slate-500">체력</div>
+                                                <div className="text-lg font-bold text-green-400">{selectedSlayer.maxHp.toLocaleString()}</div>
+                                            </div>
+                                            <div>
+                                                <div className="text-xs text-slate-500">공격력</div>
+                                                <div className="text-lg font-bold text-red-400">{selectedSlayer.atk.toLocaleString()}</div>
+                                            </div>
+                                            <div>
+                                                <div className="text-xs text-slate-500">치명타 확률</div>
+                                                <div className="text-lg font-bold text-yellow-400">{5 + weaponLv + (player.trainingLevels?.meditation || 0)}%</div>
+                                            </div>
+                                            <div>
+                                                <div className="text-xs text-slate-500">호흡 숙련도</div>
+                                                <div className="text-lg font-bold text-blue-400">{selectedSlayer.mastery || 0}</div>
+                                            </div>
+                                        </div>
 
-                                {/* Weapon Refine */}
-                                <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
-                                    <div className="flex justify-between mb-2">
-                                        <span className="font-bold text-slate-200">일륜도 연마 (+{weaponLv})</span>
-                                        <span className="text-xs text-red-400">{weaponIronCost} 철 / {weaponGoldCost} G</span>
-                                    </div>
-                                    <button 
-                                        onClick={() => onRefineWeapon(selectedSlayer.id)}
-                                        disabled={!canRefine}
-                                        className={`w-full py-2 rounded font-bold text-sm ${canRefine ? 'bg-red-700 hover:bg-red-600 text-white' : 'bg-slate-700 text-slate-500'}`}
-                                    >
-                                        치명타 확률/피해 증가
-                                    </button>
-                                </div>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            {/* Level Up */}
+                                            <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                                                <div className="flex justify-between mb-2">
+                                                    <span className="font-bold text-slate-200">레벨 강화</span>
+                                                    <span className="text-xs text-yellow-500">{upgradeCost.toLocaleString()} G</span>
+                                                </div>
+                                                <button 
+                                                    onClick={() => onUpgrade(selectedSlayer.id)}
+                                                    disabled={!canUpgrade}
+                                                    className={`w-full py-2 rounded font-bold text-sm ${canUpgrade ? 'bg-amber-600 hover:bg-amber-500 text-white' : 'bg-slate-700 text-slate-500'}`}
+                                                >
+                                                    Lv.{selectedSlayer.level} → Lv.{selectedSlayer.level + 1}
+                                                </button>
+                                            </div>
 
-                                {/* Mark Awakening */}
-                                <div className="bg-slate-800 p-4 rounded-lg border border-slate-700 relative overflow-hidden">
-                                    <div className="flex justify-between mb-2 relative z-10">
-                                        <span className="font-bold text-slate-200">반점 발현 (Lv.50)</span>
-                                        <span className="text-xs text-orange-400">100k G / 100 철</span>
+                                            {/* Rank Up */}
+                                            <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                                                <div className="flex justify-between mb-2">
+                                                    <span className="font-bold text-slate-200">승급 심사</span>
+                                                    {nextRank ? <span className="text-xs text-purple-400">{nextRank.cost.toLocaleString()} G (Lv.{nextRank.minLv})</span> : <span className="text-xs text-slate-500">최고 계급</span>}
+                                                </div>
+                                                <button 
+                                                    onClick={() => onPromote(selectedSlayer.id)}
+                                                    disabled={!canPromote}
+                                                    className={`w-full py-2 rounded font-bold text-sm ${canPromote ? 'bg-purple-600 hover:bg-purple-500 text-white' : 'bg-slate-700 text-slate-500'}`}
+                                                >
+                                                    {nextRank ? `${nextRank.name} 승급` : '승급 불가'}
+                                                </button>
+                                            </div>
+
+                                             {/* Mark Awakening */}
+                                            <div className="bg-slate-800 p-4 rounded-lg border border-slate-700 relative overflow-hidden md:col-span-2">
+                                                <div className="flex justify-between mb-2 relative z-10">
+                                                    <span className="font-bold text-slate-200">반점 발현 (Lv.50)</span>
+                                                    <span className="text-xs text-orange-400">100k G / 100 철</span>
+                                                </div>
+                                                <button 
+                                                    onClick={() => onAwakenMark(selectedSlayer.id)}
+                                                    disabled={!canAffordMark || !canMark}
+                                                    className={`w-full py-2 rounded font-bold text-sm relative z-10 ${canAffordMark && canMark ? 'bg-orange-600 hover:bg-orange-500 text-white animate-pulse' : 'bg-slate-700 text-slate-500'}`}
+                                                >
+                                                    능력치 50% 영구 상승 (초기화)
+                                                </button>
+                                                {selectedSlayer.markLevel > 0 && <div className="absolute -bottom-4 -right-4 text-6xl text-red-500/10 font-black z-0 pointer-events-none">{selectedSlayer.markLevel}</div>}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <button 
-                                        onClick={() => onAwakenMark(selectedSlayer.id)}
-                                        disabled={!canAffordMark || !canMark}
-                                        className={`w-full py-2 rounded font-bold text-sm relative z-10 ${canAffordMark && canMark ? 'bg-orange-600 hover:bg-orange-500 text-white animate-pulse' : 'bg-slate-700 text-slate-500'}`}
-                                    >
-                                        능력치 50% 영구 상승 (초기화)
-                                    </button>
-                                    {selectedSlayer.markLevel > 0 && <div className="absolute -bottom-4 -right-4 text-6xl text-red-500/10 font-black z-0 pointer-events-none">{selectedSlayer.markLevel}</div>}
-                                </div>
+                                )}
+
+                                {activeTab === 'SKILL' && (
+                                    <div className="space-y-4">
+                                        <div className="bg-indigo-900/20 p-4 rounded border border-indigo-500/30">
+                                            <div className="flex justify-between mb-1">
+                                                <h3 className="font-bold text-indigo-300">기본 기술: {selectedSlayer.skill.name}</h3>
+                                                <span className="text-xs bg-indigo-900 text-indigo-200 px-2 py-0.5 rounded">쿨타임 {selectedSlayer.skill.cooldown}초</span>
+                                            </div>
+                                            <p className="text-sm text-slate-400">{selectedSlayer.skill.description}</p>
+                                            <div className="mt-2 text-xs text-slate-500">피해량: 공격력의 {selectedSlayer.skill.damageMultiplier * 100}%</div>
+                                        </div>
+
+                                        <div className={`p-4 rounded border ${selectedSlayer.level >= 10 ? 'bg-red-900/20 border-red-500/30' : 'bg-slate-800 border-slate-700 opacity-50'}`}>
+                                            <div className="flex justify-between mb-1">
+                                                <h3 className="font-bold text-red-300">각성 기술: {selectedSlayer.awakenSkill.name}</h3>
+                                                <span className="text-xs bg-red-900 text-red-200 px-2 py-0.5 rounded">쿨타임 {selectedSlayer.awakenSkill.cooldown}초</span>
+                                            </div>
+                                            <p className="text-sm text-slate-400">{selectedSlayer.awakenSkill.description}</p>
+                                            <div className="mt-2 text-xs text-slate-500">피해량: 공격력의 {selectedSlayer.awakenSkill.damageMultiplier * 100}%</div>
+                                            {selectedSlayer.level < 10 && <div className="text-red-500 text-xs font-bold mt-2">※ 레벨 10 달성 시 해금</div>}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {activeTab === 'EQUIP' && (
+                                    <div className="space-y-6">
+                                        {/* Weapon */}
+                                        <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                                            <div className="flex justify-between mb-2">
+                                                <span className="font-bold text-slate-200 flex items-center gap-2"><Swords size={16}/> 일륜도 연마 (+{weaponLv})</span>
+                                                <span className="text-xs text-red-400">{weaponIronCost} 철 / {weaponGoldCost} G</span>
+                                            </div>
+                                            <p className="text-xs text-slate-400 mb-4">무기를 연마하여 치명타 확률과 피해량을 증가시킵니다.</p>
+                                            <button 
+                                                onClick={() => onRefineWeapon(selectedSlayer.id)}
+                                                disabled={!canRefine}
+                                                className={`w-full py-2 rounded font-bold text-sm ${canRefine ? 'bg-red-700 hover:bg-red-600 text-white' : 'bg-slate-700 text-slate-500'}`}
+                                            >
+                                                연마하기
+                                            </button>
+                                        </div>
+
+                                        {/* Artifact */}
+                                        <div className="border-t border-slate-700 pt-6">
+                                            <h3 className="font-bold text-white mb-4 flex items-center gap-2"><Backpack size={16}/> 유물 장착</h3>
+                                            
+                                            {/* Current Equipped */}
+                                            <div className="bg-slate-900 border border-slate-700 p-4 rounded mb-4 text-center min-h-[100px] flex flex-col items-center justify-center">
+                                                {equippedArtifact ? (
+                                                    <>
+                                                        <div className={`text-lg font-bold mb-1 ${ARTIFACT_RARITY[equippedArtifact.rarity].color}`}>{equippedArtifact.name}</div>
+                                                        <div className="text-xs text-slate-400 mb-3">{equippedArtifact.desc}</div>
+                                                        <button onClick={() => onUnequipArtifact(selectedSlayer.id)} className="text-xs bg-red-900/50 text-red-300 px-3 py-1 rounded hover:bg-red-900">장착 해제</button>
+                                                    </>
+                                                ) : (
+                                                    <div className="text-slate-600 text-sm">장착된 유물이 없습니다.</div>
+                                                )}
+                                            </div>
+
+                                            {/* Inventory List */}
+                                            <div className="space-y-2">
+                                                <div className="text-xs text-slate-400 font-bold mb-2">인벤토리 ({player.inventory.length})</div>
+                                                <div className="grid gap-2">
+                                                    {player.inventory.map(item => {
+                                                        const wearer = player.ownedSlayers.find(s => s.equippedArtifactId === item.id);
+                                                        const isEquippedByOther = wearer && wearer.id !== selectedSlayer.id;
+                                                        
+                                                        // Filter out currently equipped by THIS slayer to avoid duplicate logic visual
+                                                        if (selectedSlayer.equippedArtifactId === item.id) return null;
+
+                                                        return (
+                                                            <div key={item.id} className={`p-3 rounded border bg-slate-800 flex justify-between items-center ${ARTIFACT_RARITY[item.rarity].border}`}>
+                                                                <div>
+                                                                    <div className={`text-sm font-bold ${ARTIFACT_RARITY[item.rarity].color}`}>{item.name}</div>
+                                                                    <div className="text-[10px] text-slate-400">{item.desc}</div>
+                                                                    {isEquippedByOther && <div className="text-[10px] text-yellow-600 mt-1">From: {wearer.name}</div>}
+                                                                </div>
+                                                                <button 
+                                                                    onClick={() => onEquipArtifact(selectedSlayer.id, item.id)}
+                                                                    className={`px-3 py-1 rounded text-xs font-bold border ${isEquippedByOther ? 'bg-yellow-900/30 border-yellow-600 text-yellow-500' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}
+                                                                >
+                                                                    {isEquippedByOther ? '뺏어오기' : '장착'}
+                                                                </button>
+                                                            </div>
+                                                        )
+                                                    })}
+                                                    {player.inventory.length === 0 && <div className="text-center text-xs text-slate-600 py-4">보유한 유물이 없습니다.</div>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ) : (
@@ -1254,7 +1428,7 @@
             {/* Header */}
             <div className="relative z-10 p-4 sm:p-6 flex justify-between items-start border-b border-slate-700 bg-slate-900/50 shrink-0">
               <div>
-                <h1 className="text-xl sm:text-3xl font-cinzel text-indigo-100 drop-shadow-lg font-bold">귀살대 본부 (Ver 8.0)</h1>
+                <h1 className="text-xl sm:text-3xl font-cinzel text-indigo-100 drop-shadow-lg font-bold">귀살대 본부 (Ver 13.0)</h1>
                 <p className="text-slate-400 text-xs sm:text-sm mt-1">
                   진행: <span className="text-yellow-400 font-bold">STAGE {player.stage}</span>
                 </p>
@@ -2533,12 +2707,12 @@
                 
                 // Artifact Drop
                 let gotArtifact = null;
-                if (enemy.isBoss && Math.random() < 0.4) {
+                if (enemy.isBoss && Math.random() < 0.45) { // Increased drop rate for Ver 13.0
                     const rarityRoll = Math.random();
                     let rarity = 'COMMON';
-                    if (rarityRoll < 0.01) rarity = 'LEGENDARY';
-                    else if (rarityRoll < 0.1) rarity = 'EPIC';
-                    else if (rarityRoll < 0.3) rarity = 'RARE';
+                    if (rarityRoll < 0.03) rarity = 'LEGENDARY'; // Slightly increased legendary rate
+                    else if (rarityRoll < 0.15) rarity = 'EPIC';
+                    else if (rarityRoll < 0.4) rarity = 'RARE';
 
                     const template = ARTIFACT_TEMPLATES[Math.floor(Math.random() * ARTIFACT_TEMPLATES.length)];
                     gotArtifact = { ...template, id: Date.now().toString(), rarity };
