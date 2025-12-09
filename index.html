@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>귀멸의 칼날: 귀살대 키우기 (Final Ver)</title>
+    <title>귀멸의 칼날: 귀살대 키우기 (Ver 16.2)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
@@ -69,8 +69,8 @@
     "react": "https://esm.sh/react@18.2.0",
     "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
     "lucide-react": "https://esm.sh/lucide-react@0.292.0?external=react",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
-    "react/": "https://aistudiocdn.com/react@^19.2.1/"
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/"
   }
 }
 </script>
@@ -81,7 +81,7 @@
     <script type="text/babel" data-type="module">
       import React, { useState, useEffect, useRef } from 'react';
       import { createRoot } from 'react-dom/client';
-      import { Swords, Home, ShoppingBag, Heart, Skull, Zap, ChevronRight, CheckCircle2, Circle, Users, ShieldAlert, Sparkles, Flame, Hammer, Mountain, Gem, Backpack, Flower, Target, BarChart2, Dumbbell, PlayCircle, PauseCircle, Crown, Shield, Droplets } from 'lucide-react';
+      import { Swords, Home, ShoppingBag, Heart, Skull, Zap, ChevronRight, CheckCircle2, Circle, Users, ShieldAlert, Sparkles, Flame, Hammer, Mountain, Gem, Backpack, Flower, Target, BarChart2, Dumbbell, PlayCircle, PauseCircle, Crown, Shield, Droplets, BookOpen } from 'lucide-react';
 
       // --- CONSTANTS & DATA ---
       
@@ -131,12 +131,18 @@
         { id: 'gyomei', name: '히메지마 교메이', style: BreathingStyle.STONE, role: Role.ATTACKER, baseHp: 525, baseAtk: 150, price: 6000, description: '귀살대 최강의 사나이.', skill: { name: '제2형: 천면 부수기', damageMultiplier: 5.0, cooldown: 8, description: '철퇴를 머리 위로 던져 내려찍는다.' }, awakenSkill: { name: '제5형: 와륜 형부', damageMultiplier: 9.0, cooldown: 16, description: '거대한 철퇴와 도끼로 적을 완전히 분쇄한다.' }, color: 'bg-stone-600' },
         { id: 'yoriichi', name: '츠기쿠니 요리이치', style: BreathingStyle.SUN, role: Role.ATTACKER, baseHp: 750, baseAtk: 300, price: 25000, description: '모든 호흡의 시초이자 최강의 검사.', skill: { name: '해의 호흡: 13형', damageMultiplier: 12.0, cooldown: 12, description: '무잔조차 공포에 떨게 만든 전설의 검기.' }, awakenSkill: { name: '혁도 발현', damageMultiplier: 15.0, cooldown: 20, description: '검을 붉게 물들여 재생을 봉쇄하고 벤다.' }, color: 'bg-red-800' },
         { id: 'yoriichi_god', name: '태양의 신 요리이치', style: BreathingStyle.SUN, role: Role.ATTACKER, baseHp: 1500, baseAtk: 600, price: 100000, currency: 'LILY', lilyPrice: 10000, description: '신에 근접한 검사. 오니화 탄지로조차 능가한다.', skill: { name: '해의 호흡: 일광', damageMultiplier: 8.0, cooldown: 4, description: '태양 그 자체의 열기로 적을 소멸시킨다.' }, awakenSkill: { name: '제13형: 신라만상', damageMultiplier: 25.0, cooldown: 15, description: '세상의 모든 이치를 담은, 피할 수 없는 일격.' }, color: 'bg-orange-700 text-yellow-100 border-2 border-yellow-400' },
+        
+        // SUPPORTERS
         { id: 'tamayo', name: '타마요', style: BreathingStyle.BLOOD, role: Role.SUPPORTER, baseHp: 180, baseAtk: 40, price: 1600, description: '무잔을 적대하는 의사 혈귀. 아군을 치료한다.', skill: { name: '혈귀술: 시각몽환의 향', damageMultiplier: 2.0, cooldown: 5, description: '적을 교란시키고 아군 하나를 치료한다.' }, awakenSkill: { name: '치료의 약', damageMultiplier: 0, cooldown: 10, description: '아군 전체의 체력을 회복시킨다.' }, color: 'bg-purple-800' },
         { id: 'yushiro', name: '유시로', style: BreathingStyle.BLOOD, role: Role.SUPPORTER, baseHp: 200, baseAtk: 50, price: 1600, description: '타마요를 모시는 혈귀.', skill: { name: '혈귀술: 눈가림', damageMultiplier: 1.5, cooldown: 4, description: '모습을 감추어 적의 공격을 회피하고 기습한다.' }, awakenSkill: { name: '시야 공유', damageMultiplier: 0, cooldown: 10, description: '아군의 치명타 확률을 대폭 상승시킨다.' }, color: 'bg-teal-700' },
         { id: 'aoi', name: '칸자키 아오이', style: BreathingStyle.WATER, role: Role.SUPPORTER, baseHp: 160, baseAtk: 40, price: 500, description: '나비 저택에서 대원들을 돕는 대원.', skill: { name: '응급 처치', damageMultiplier: 1.0, cooldown: 5, description: '약한 공격 후 아군을 소폭 회복한다.' }, awakenSkill: { name: '전력 간호', damageMultiplier: 0, cooldown: 10, description: '아군 전체를 회복시킨다.' }, color: 'bg-blue-500' },
         { id: 'enmu', name: '엔무 (하현 1)', style: BreathingStyle.DREAM, role: Role.SUPPORTER, baseHp: 300, baseAtk: 40, price: 18000, description: '적을 잠재우고 아군에게 활력을 불어넣는다.', skill: { name: '혈귀술: 강제 혼수', damageMultiplier: 0, cooldown: 8, description: '아군 전체를 치유하고 적의 공격 턴을 늦춘다.' }, awakenSkill: { name: '행복한 꿈', damageMultiplier: 0, cooldown: 15, description: '아군 전체의 체력을 대폭 회복하고 공격력을 강화한다.' }, color: 'bg-indigo-950 text-pink-300' },
         { id: 'kotetsu', name: '코테츠', style: BreathingStyle.NONE, role: Role.SUPPORTER, baseHp: 150, baseAtk: 30, price: 3000, description: '대장장이 마을의 어린 장인. 분석력이 뛰어나다.', skill: { name: '약점 분석', damageMultiplier: 2.0, cooldown: 6, description: '적의 구조를 파악하여 치명타 확률을 높인다.' }, awakenSkill: { name: '기관 장치 가동', damageMultiplier: 5.0, cooldown: 15, description: '전투용 꼭두각시를 조종하여 공격한다.' }, color: 'bg-stone-500' },
         { id: 'yahaba', name: '야하바', style: BreathingStyle.ARROW, role: Role.SUPPORTER, baseHp: 350, baseAtk: 80, price: 8000, description: '벡터를 조작하는 화살표 오니.', skill: { name: '홍결의 화살', damageMultiplier: 2.5, cooldown: 4, description: '적의 공격 궤도를 틀어 아군 피해를 줄인다.' }, awakenSkill: { name: '벡터 조작', damageMultiplier: 5.0, cooldown: 10, description: '적을 바닥에 내리꽂아 큰 피해를 준다.' }, color: 'bg-green-800' },
+        { id: 'senjuro', name: '렌고쿠 센쥬로', style: BreathingStyle.FLAME, role: Role.SUPPORTER, baseHp: 180, baseAtk: 35, price: 4000, description: '쿄쥬로의 동생. 검술 재능은 없지만 마음이 따뜻하다.', skill: { name: '따뜻한 격려', damageMultiplier: 0, cooldown: 8, description: '형의 의지를 잇는다. 아군 전체 쿨타임을 2초 감소시킨다.' }, awakenSkill: { name: '염주의 일지', damageMultiplier: 0, cooldown: 15, description: '대대로 내려오는 기록을 분석하여 아군 전체 공격력을 높인다.' }, color: 'bg-orange-300' },
+        { id: 'kiriya', name: '우부야시키 키리야', style: BreathingStyle.NONE, role: Role.SUPPORTER, baseHp: 200, baseAtk: 20, price: 15000, description: '새로운 당주. 뛰어난 기억력과 지휘 능력을 가졌다.', skill: { name: '전황 파악', damageMultiplier: 0, cooldown: 6, description: '적의 위치를 간파하여 아군 치명타 확률을 높인다.' }, awakenSkill: { name: '지휘 관제', damageMultiplier: 0, cooldown: 14, description: '지도를 그려내듯 전장을 지휘해 아군 전체 능력을 대폭 상승시킨다.' }, color: 'bg-slate-900 text-purple-300' },
+        
+        // VILLAINS
         { id: 'rui', name: '루이 (하현 5)', style: BreathingStyle.THREAD, role: Role.ATTACKER, baseHp: 400, baseAtk: 120, price: 15000, description: '단단한 실을 사용하는 거미 오니.', skill: { name: '혈귀술: 각사뢰', damageMultiplier: 4.0, cooldown: 5, description: '붉은 실로 적을 절단한다.' }, awakenSkill: { name: '살목롱', damageMultiplier: 7.5, cooldown: 11, description: '실로 만든 감옥에 가두어 베어버린다.' }, color: 'bg-slate-200 text-red-600' },
         { id: 'susamaru', name: '스사마루', style: BreathingStyle.TEMARI, role: Role.ATTACKER, baseHp: 380, baseAtk: 110, price: 8500, description: '6개의 팔로 공을 던지는 오니.', skill: { name: '놀이공 던지기', damageMultiplier: 3.5, cooldown: 3, description: '빠르게 속도로 공을 던져 공격한다.' }, awakenSkill: { name: '6연속 투척', damageMultiplier: 7.0, cooldown: 8, description: '모든 팔을 이용하여 쉴 새 없이 공을 던진다.' }, color: 'bg-orange-600' },
         { id: 'kokushibo_demon', name: '코쿠시보 (상현 1)', style: BreathingStyle.MOON, role: Role.ATTACKER, baseHp: 800, baseAtk: 350, price: 100000, currency: 'LILY', lilyPrice: 5000, description: '달의 호흡을 사용하는 최강의 상현. (플레이어블)', skill: { name: '제7형: 액경・달의 춤', damageMultiplier: 5.0, cooldown: 5, description: '원거리에서 교차하는 달의 참격을 날린다.' }, awakenSkill: { name: '제16형: 월홍・반월', damageMultiplier: 12.0, cooldown: 15, description: '하늘에서 무수한 거대 참격을 떨어뜨려 전장을 초토화한다.' }, color: 'bg-purple-950 text-red-500' },
@@ -151,8 +157,6 @@
         { id: 'sumiyoshi', name: '스미요시', style: BreathingStyle.SUN, role: Role.ATTACKER, baseHp: 200, baseAtk: 50, price: 5000, description: '요리이치의 검무를 눈에 새긴 카마도 가문의 조상.', skill: { name: '약속의 기억', damageMultiplier: 3.5, cooldown: 5, description: '요리이치와의 약속을 떠올리며 힘을 낸다.' }, awakenSkill: { name: '해의 호흡: 12형의 춤', damageMultiplier: 8.0, cooldown: 14, description: '밤새도록 멈추지 않고 춤을 춘다.' }, color: 'bg-amber-700' },
         { id: 'shinjuro', name: '렌고쿠 신쥬로', style: BreathingStyle.FLAME, role: Role.ATTACKER, baseHp: 420, baseAtk: 130, price: 4800, description: '전 염주이자 쿄쥬로의 아버지. 과거에는 열정적이었다.', skill: { name: '제4형: 성염의 파도', damageMultiplier: 4.5, cooldown: 6, description: '소용돌이치는 화염으로 방어와 공격을 동시에 한다.' }, awakenSkill: { name: '염주의 품격', damageMultiplier: 8.5, cooldown: 13, description: '녹슨 검술을 다시 불태워 강력한 일격을 날린다.' }, color: 'bg-red-800' },
         { id: 'sabito_spirit', name: '사비토 (영혼)', style: BreathingStyle.WATER, role: Role.ATTACKER, baseHp: 220, baseAtk: 70, price: 4500, description: '가면이 깨진 진정한 모습의 사비토.', skill: { name: '쾌도난마', damageMultiplier: 4.0, cooldown: 5, description: '망설임 없는 검격으로 적을 벤다.' }, awakenSkill: { name: '진정한 용기', damageMultiplier: 7.5, cooldown: 11, description: '모두를 지키겠다는 일념으로 한계를 초월한다.' }, color: 'bg-orange-400' },
-        { id: 'jigoro', name: '쿠와지마 지고로', style: BreathingStyle.THUNDER, role: Role.ATTACKER, baseHp: 380, baseAtk: 110, price: 4500, description: '젠이츠의 스승. 번개의 호흡 사용자.', skill: { name: '벽력일섬', damageMultiplier: 4.2, cooldown: 6, description: '전광석화와 같은 발도술.' }, awakenSkill: { name: '낙뢰', damageMultiplier: 7.0, cooldown: 14, description: '하늘에서 벼락을 떨어뜨린다.' }, color: 'bg-yellow-700' },
-        { id: 'urokodaki', name: '우로코다키 사콘지', style: BreathingStyle.WATER, role: Role.ATTACKER, baseHp: 400, baseAtk: 100, price: 4500, description: '탄지로와 기유의 스승.', skill: { name: '제8형: 용소', damageMultiplier: 4.0, cooldown: 7, description: '위에서 아래로 강력하게 베어낸다.' }, awakenSkill: { name: '육성자의 가르침', damageMultiplier: 6.5, cooldown: 15, description: '노련한 검술로 적의 빈틈을 파고든다.' }, color: 'bg-blue-300' }
       ];
 
       const ENEMY_TEMPLATES = [
@@ -759,7 +763,7 @@
             
             <div className="relative z-10 p-4 sm:p-6 flex justify-between items-start border-b border-slate-700 bg-slate-900/50 shrink-0">
               <div>
-                <h1 className="text-xl sm:text-3xl font-cinzel text-indigo-100 drop-shadow-lg font-bold">귀살대 본부 (Ver 16.1)</h1>
+                <h1 className="text-xl sm:text-3xl font-cinzel text-indigo-100 drop-shadow-lg font-bold">귀살대 본부 (Ver 16.2)</h1>
                 <p className="text-slate-400 text-xs sm:text-sm mt-1">
                   진행: <span className="text-yellow-400 font-bold">STAGE {player.stage}</span>
                   <span className="ml-2 bg-slate-800 px-2 py-0.5 rounded text-xs text-slate-400">{player.difficulty}</span>
@@ -1035,7 +1039,7 @@
                                 </div>
                                 <div className="bg-blue-950/40 border border-blue-800/50 p-4 rounded-xl">
                                     <div className="text-blue-400 text-xs uppercase mb-1">Reward</div>
-                                    <div className="font-bold text-lg">푸른 피안화</div>
+                                    <div className="font-bold text-lg">푸른 피안화 (1만딜/1개)</div>
                                 </div>
                             </div>
 
@@ -1600,8 +1604,8 @@
         const finishRaid = () => {
              if (battleMode !== 'RAID') return;
              
-             // Calculate Reward: 1 Blue Lily per 100,000 Damage
-             const lilyReward = Math.floor(raidScore / 100000);
+             // Calculate Reward: 1 Blue Lily per 10,000 Damage (Significantly increased)
+             const lilyReward = Math.floor(raidScore / 10000);
              const goldReward = Math.floor(raidScore / 10);
              
              setPlayer(p => ({
@@ -1611,7 +1615,7 @@
              }));
              
              if (lilyReward > 0) alert(`[최종 국면 보상] 푸른 피안화 ${lilyReward}개, ${goldReward.toLocaleString()}G 획득!`);
-             else alert(`[최종 국면 종료] ${goldReward.toLocaleString()}G 획득. (피안화는 10만점 당 1개)`);
+             else alert(`[최종 국면 종료] ${goldReward.toLocaleString()}G 획득. (피안화는 1만점 당 1개)`);
              
              setEnemy(null);
              setView('ESTATE');
@@ -2052,24 +2056,10 @@
 
                  if (prev.gold < cost) return prev;
                  
-                 // Update stats for all slayers if it's not cooldown
-                 // (Cooldown is calculated at runtime, but HP/ATK need to update state to show immediately)
-                 // Actually simpler to just update the level, and `upgradeSlayer` logic handles base stat calc
-                 // But wait, training applies ON TOP.
-                 // We will just update the training level. The render/calc logic uses it.
-                 // For HP/ATK display update, we might need to re-calc stats.
-                 // Let's do a recalculation pass.
-
                  const newLevels = { ...prev.trainingLevels, [typeId]: currentLv + 1 };
                  
-                 // Re-calc stats for everyone based on new training
                  const updatedSlayers = prev.ownedSlayers.map(s => {
                       if (type.stat === 'atk' || type.stat === 'maxHp') {
-                           // This is tricky without storing base-base stats separately.
-                           // Current approach: stats are stored in state.
-                           // To apply permanent % boost, we multiply? No, that compounds.
-                           // Simple fix: We just store training level. The battle logic uses it for DMG.
-                           // But HP needs to be increased in state.
                            if (type.stat === 'maxHp') {
                                return { ...s, maxHp: Math.floor(s.maxHp * 1.05), currentHp: Math.floor(s.currentHp * 1.05) };
                            }
@@ -2234,10 +2224,8 @@
                const isBoss = enemy.isBoss;
                let lilyDrop = 0;
                if (isBoss) {
-                   // Boss drops lilies. Higher stage = more chance/amount
-                   if (Math.random() < 0.5 || player.difficulty === 'HARD') {
-                        lilyDrop = Math.max(1, Math.floor(player.stage / 10));
-                   }
+                   // Boss drops lilies. Increased drop rate and amount
+                   lilyDrop = Math.max(1, Math.floor(player.stage / 3)) + 2;
                }
 
                addLog(`토벌 완료! ${enemy.rewardGold.toLocaleString()}G ${lilyDrop > 0 ? `, 피안화 ${lilyDrop}개` : ''} 획득`);
@@ -2352,8 +2340,6 @@
             // Auto Attack (20% ATK)
             let totalPlayerDmg = 0;
             aliveSlayers.forEach(s => {
-               // Support roles heal instead of attack on auto?
-               // Simplified: Supporters do weak attack on auto, heal on skill
                const { finalDmg } = calculateDamage(s, 0.2);
                totalPlayerDmg += finalDmg;
             });
