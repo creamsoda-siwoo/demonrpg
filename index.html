@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>귀멸의 칼날: 귀살대 키우기 (Ver 20.0)</title>
+    <title>귀멸의 칼날: 귀살대 키우기 (Ver 21.0)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
@@ -104,7 +104,7 @@
         MIST: '안개의 호흡', INSECT: '벌레의 호흡', STONE: '바위의 호흡', WIND: '바람의 호흡',
         SOUND: '소리의 호흡', LOVE: '사랑의 호흡', SERPENT: '뱀의 호흡', SUN: '해의 호흡',
         MOON: '달의 호흡', ICE: '얼음의 호흡 (혈귀술)', FLOWER: '꽃의 호흡', BLOOD: '혈귀술',
-        NONE: '호흡 없음 (무술/특수)', ARROW: '화살표 혈귀술', TEMARI: '공 혈귀술', THREAD: '실 혈귀술', DREAM: '꿈 혈귀술',
+        NONE: '호흡 없음', ARROW: '화살표 혈귀술', TEMARI: '공 혈귀술', THREAD: '실 혈귀술', DREAM: '꿈 혈귀술',
         SNOW: '눈의 호흡', WOOD: '목둔 혈귀술', WATER_FISH: '수옥 혈귀술'
       };
 
@@ -115,7 +115,7 @@
         { id: 1, name: '계급: 경 (Kanoe)', minLv: 10, multiplier: 1.5, cost: 2000 },
         { id: 2, name: '계급: 병 (Hinoe)', minLv: 30, multiplier: 2.5, cost: 10000 },
         { id: 3, name: '계급: 갑 (Kinoe)', minLv: 50, multiplier: 4.0, cost: 50000 },
-        { id: 4, name: '주 (Hashira)', minLv: 80, multiplier: 7.0, cost: 200000 },
+        { id: 4, name: '주 (Hashira)', minLv: 100, multiplier: 7.0, cost: 200000 },
         { id: 5, name: '계승자 (Tsuguko)', minLv: 100, multiplier: 10.0, cost: 1000000 },
         { id: 6, name: '지주 대리 (Acting Hashira)', minLv: 150, multiplier: 15.0, cost: 5000000 },
         { id: 7, name: '최강의 검사 (Legend)', minLv: 200, multiplier: 25.0, cost: 20000000 }
@@ -132,16 +132,29 @@
         // REMAKE: TANJIRO (WATER)
         { id: 'tanjiro', name: '카마도 탄지로 (물)', style: BreathingStyle.WATER, role: Role.ATTACKER, baseHp: 180, baseAtk: 45, price: 0, description: '물의 호흡을 사용하는 귀살대 대원.', 
           skill: { name: '제2형: 물방아', damageMultiplier: 3.5, cooldown: 5, description: '몸을 회전시키며 물의 궤적을 그리는 참격.' }, 
-          awakenSkill: { name: '제10형: 생생유전', damageMultiplier: 6.5, cooldown: 11, description: '회전할수록 위력이 강해지는 물의 용.' }, 
-          hiddenSkill: { name: '물의 호흡:泷壺 (용소)', damageMultiplier: 12.0, cooldown: 22, description: '위에서 아래로 폭포수처럼 내려찍는 일격.' },
+          awakenSkill: { name: '제 8형: 용소', damageMultiplier: 6.5, cooldown: 11, description: '회전할수록 위력이 강해지는 물의 용.' }, 
+          hiddenSkill: { name: '제10형: 생생유전', damageMultiplier: 12.0, cooldown: 22, description: '위에서 아래로 폭포수처럼 내려찍는 일격.' },
           color: 'bg-blue-600' },
           
-        // NEW: TANJIRO (SUN/HINOKAMI)
-        { id: 'tanjiro_sun', name: '히노카미 탄지로', style: BreathingStyle.SUN, role: Role.ATTACKER, baseHp: 350, baseAtk: 110, price: 50000, currency: 'GOLD', description: '해의 호흡을 각성한 탄지로.', 
+        // NEW: TANJIRO (SUN/HINOKAMI) - PRICE REDUCED 10x
+        { id: 'tanjiro_sun', name: '히노카미카구라 탄지로', style: BreathingStyle.SUN, role: Role.ATTACKER, baseHp: 350, baseAtk: 110, price: 5000, currency: 'GOLD', description: '해의 호흡을 각성한 탄지로.', 
           skill: { name: '원무', damageMultiplier: 5.0, cooldown: 6, description: '강력한 화염의 참격.' }, 
           awakenSkill: { name: '벽라의 천', damageMultiplier: 8.5, cooldown: 13, description: '하늘을 태우는 화염의 고리.' }, 
-          hiddenSkill: { name: '13형: 12형의 연결', damageMultiplier: 18.0, cooldown: 28, description: '해의 호흡의 모든 형을 연결한 최강의 연격.' },
+          hiddenSkill: { name: '햇무리의 용', damageMultiplier: 18.0, cooldown: 28, description: '해의 호흡의 모든 형을 연결한 최강의 연격.' },
           color: 'bg-emerald-700 text-yellow-100 border border-red-400' },
+
+        // NEW: DEMON KING TANJIRO (SUN CONQUEROR) - STRONGER THAN MUZAN
+        { id: 'dk_tanjiro_god', name: '탄지로 (태양 정복자)', style: BreathingStyle.SUN, role: Role.ATTACKER, baseHp: 5000, baseAtk: 2000, price: 50000, currency: 'LILY', lilyPrice: 50000, description: '무잔보다 강한, 태양을 극복한 오니의 왕.', 
+          skill: { name: '태양의 포효', damageMultiplier: 10.0, cooldown: 4, description: '충격파만으로 적을 소멸시킨다.' }, 
+          awakenSkill: { name: '신의 권능', damageMultiplier: 30.0, cooldown: 12, description: '오니와 인간을 초월한 힘.' }, 
+          hiddenSkill: { name: '개벽: 태양의 지배자', damageMultiplier: 100.0, cooldown: 30, description: '전장을 태양의 불길로 뒤덮어 삭제한다.' },
+          color: 'bg-rose-950 text-yellow-300 border-2 border-yellow-500' },
+
+        { id: 'kagaya', name: '우부야시키 카가야', style: BreathingStyle.NONE, role: Role.SUPPORTER, baseHp: 500, baseAtk: 10, price: 50000, description: '귀살대의 당주. 절대적인 카리스마로 지휘한다.', 
+          skill: { name: '마음을 울리는 목소리', damageMultiplier: 0, cooldown: 15, description: '아군 전체를 대폭 회복시키고 안정을 준다.' }, 
+          awakenSkill: { name: '절대적 지휘', damageMultiplier: 0, cooldown: 25, description: '아군 전체 공격력을 2배로 증가시킨다.' }, 
+          hiddenSkill: { name: '귀살대의 의지', damageMultiplier: 0, cooldown: 50, description: '모든 아군 부활 및 쿨타임 초기화, 무적 부여.' },
+          color: 'bg-indigo-950 text-purple-200' },
 
         { id: 'zenitsu', name: '아가츠마 젠이츠', style: BreathingStyle.THUNDER, role: Role.ATTACKER, baseHp: 135, baseAtk: 70, price: 300, description: '극도의 공포 속에서 잠들면 진정한 힘을 발휘한다.', 
           skill: { name: '벽력일섬: 신속', damageMultiplier: 3.5, cooldown: 4, description: '보이지 않는 속도로 적을 6번 벤다.' }, 
@@ -159,11 +172,10 @@
           hiddenSkill: { name: '태양 극복', damageMultiplier: 13.0, cooldown: 25, description: '햇빛을 극복한 힘으로 적을 태워버린다.' },
           color: 'bg-rose-500' },
         
-        // NEW CHARACTERS (VER 20.0)
         { id: 'kanae', name: '코쵸우 카나에', style: BreathingStyle.FLOWER, role: Role.ATTACKER, baseHp: 280, baseAtk: 80, price: 5000, description: '전 화주이자 시노부의 언니. 우아하고 강하다.', 
           skill: { name: '제2형: 어영 매화', damageMultiplier: 4.0, cooldown: 5, description: '매화 꽃잎이 흩날리듯 검을 휘두른다.' }, 
           awakenSkill: { name: '제6형: 소용돌이 복사꽃', damageMultiplier: 7.5, cooldown: 12, description: '몸을 비틀어 강력한 회전 참격을 날린다.' }, 
-          hiddenSkill: { name: '피안주안 (초대)', damageMultiplier: 14.0, cooldown: 25, description: '원조 피안주안의 힘으로 모든 것을 꿰뚫어본다.' },
+          hiddenSkill: { name: '피안주안', damageMultiplier: 14.0, cooldown: 25, description: '원조 피안주안의 힘으로 모든 것을 꿰뚫어본다.' },
           color: 'bg-pink-300' },
 
         { id: 'aoi_combat', name: '칸자키 아오이 (전투)', style: BreathingStyle.WATER, role: Role.ATTACKER, baseHp: 200, baseAtk: 60, price: 3000, description: '트라우마를 극복하고 검을 든 아오이.', 
@@ -239,17 +251,18 @@
         { id: 'doma_demon', name: '도우마 (상현 2)', style: BreathingStyle.ICE, role: Role.ATTACKER, baseHp: 750, baseAtk: 300, price: 80000, currency: 'LILY', lilyPrice: 4000, description: '만세극락교의 교주. 얼음을 다루는 혈귀.', skill: { name: '혈귀술: 연꽃 얼음', damageMultiplier: 4.5, cooldown: 6, description: '얼음 연꽃을 피워 적을 베어내고 얼린다.' }, awakenSkill: { name: '혈귀술: 무빙・수련보살', damageMultiplier: 10.0, cooldown: 14, description: '거대한 얼음 불상을 소환하여 압도적인 냉기를 뿜는다.' }, hiddenSkill: { name: '결정의 아이들', damageMultiplier: 20.0, cooldown: 28, description: '자신과 똑같은 분신들을 만들어 공격한다.' }, color: 'bg-cyan-900 text-white' },
         { id: 'dk_tanjiro', name: '오니화 탄지로', style: BreathingStyle.SUN, role: Role.ATTACKER, baseHp: 1000, baseAtk: 400, price: 50000, description: '태양을 극복한 오니의 왕. 해의 호흡과 혈귀술을 동시에 쓴다.', skill: { name: '혈귀술: 충격파', damageMultiplier: 5.0, cooldown: 5, description: '등에서 촉수를 꺼내 충격파를 발사한다.' }, awakenSkill: { name: '태양 극복', damageMultiplier: 20.0, cooldown: 20, description: '죽음을 초월한 일격으로 모든 것을 소멸시킨다.' }, hiddenSkill: { name: '왕의 포효', damageMultiplier: 30.0, cooldown: 35, description: '세상을 지배하는 왕의 힘을 개방한다.' }, color: 'bg-rose-950' },
         { id: 'yoriichi_zero', name: '요리이치 영식', style: BreathingStyle.SUN, role: Role.ATTACKER, baseHp: 450, baseAtk: 140, price: 5000, description: '전설의 검사를 본따 만든 전투 인형. 팔이 6개다.', skill: { name: '6연격', damageMultiplier: 4.5, cooldown: 8, description: '6개의 팔을 이용한 쉴새없는 공격.' }, awakenSkill: { name: '과부하 회전', damageMultiplier: 8.0, cooldown: 16, description: '기계 장치를 한계까지 돌려 회전하며 벤다.' }, hiddenSkill: { name: '영식: 자폭 모드', damageMultiplier: 15.0, cooldown: 30, description: '자폭에 가까운 에너지 방출로 적을 공격한다.' }, color: 'bg-red-900' },
-        { id: 'kaigaku', name: '카이가쿠', style: BreathingStyle.THUNDER, role: Role.ATTACKER, baseHp: 200, baseAtk: 75, price: 1000, description: '힘을 추구하여 오니가 된 번개의 호흡 사용자.', skill: { name: '제2형: 도혼', damageMultiplier: 3.2, cooldown: 4, description: '빠르게 5번 연속으로 벤다.' }, awakenSkill: { name: '제6형: 전굉뢰굉', damageMultiplier: 6.5, cooldown: 12, description: '검은 번개를 두르고 광범위하게 파괴한다.' }, hiddenSkill: { name: '제7형: 화뢰신 (가짜)', damageMultiplier: 10.0, cooldown: 25, description: '젠이츠를 흉내낸 검은 번개의 일격.' }, color: 'bg-neutral-800' },
+        { id: 'kaigaku', name: '카이가쿠(신 상현6)', style: BreathingStyle.THUNDER, role: Role.ATTACKER, baseHp: 200, baseAtk: 75, price: 1000, description: '힘을 추구하여 오니가 된 번개의 호흡 사용자.', skill: { name: '제2형: 도혼', damageMultiplier: 3.2, cooldown: 4, description: '빠르게 5번 연속으로 벤다.' }, awakenSkill: { name: '제6형: 전굉뢰굉', damageMultiplier: 6.5, cooldown: 12, description: '검은 번개를 두르고 광범위하게 파괴한다.' }, hiddenSkill: { name: '제7형: 화뢰신 (가짜)', damageMultiplier: 10.0, cooldown: 25, description: '젠이츠를 흉내낸 검은 번개의 일격.' }, color: 'bg-neutral-800' },
         { id: 'murata', name: '무라타', style: BreathingStyle.WATER, role: Role.ATTACKER, baseHp: 150, baseAtk: 30, price: 200, description: '어디에나 있는 평범한 대원. 하지만 생존력은 최강.', skill: { name: '물의 호흡(흐릿함)', damageMultiplier: 2.0, cooldown: 3, description: '형태가 보이지 않을 정도로 옅은 물의 호흡.' }, awakenSkill: { name: '기적의 생존', damageMultiplier: 4.0, cooldown: 15, description: '엄청난 운으로 적의 급소를 찌르고 회피한다.' }, hiddenSkill: { name: '동료의 도움', damageMultiplier: 8.0, cooldown: 30, description: '지나가던 주(Hashira)가 도와준다.' }, color: 'bg-slate-500' },
         { id: 'wives', name: '우즈이의 아내들', style: BreathingStyle.SOUND, role: Role.ATTACKER, baseHp: 240, baseAtk: 65, price: 1100, description: '스마, 마키오, 히나츠루 3인조 쿠노이치.', skill: { name: '쿠나이 난사', damageMultiplier: 3.2, cooldown: 4, description: '독이 발린 쿠나이를 사방에서 던진다.' }, awakenSkill: { name: '지원 사격', damageMultiplier: 6.0, cooldown: 12, description: '대규모 화약과 무기로 적을 포위 공격한다.' }, hiddenSkill: { name: '잠입 성공', damageMultiplier: 10.0, cooldown: 25, description: '적의 약점을 완벽하게 파악하여 찌른다.' }, color: 'bg-pink-600' },
         { id: 'michikatsu', name: '츠기쿠니 미치카츠', style: BreathingStyle.MOON, role: Role.ATTACKER, baseHp: 650, baseAtk: 250, price: 18000, description: '요리이치의 형이자 달의 호흡 창시자. (인간 시절)', skill: { name: '달의 호흡: 제1형 암월·전궁', damageMultiplier: 6.0, cooldown: 6, description: '발도와 동시에 수많은 초승달 칼날을 날린다.' }, awakenSkill: { name: '달의 호흡 극한', damageMultiplier: 10.0, cooldown: 14, description: '인간의 몸으로 극한까지 끌어올린 달의 호흡.' }, hiddenSkill: { name: '달의 호흡 16형', damageMultiplier: 20.0, cooldown: 30, description: '하늘에서 달을 떨어뜨리는 듯한 거대한 참격.' }, color: 'bg-purple-900' },
         { id: 'hakuji', name: '하쿠지', style: BreathingStyle.NONE, role: Role.ATTACKER, baseHp: 500, baseAtk: 200, price: 15000, description: '오니가 되기 전의 아카자. 소류 무술의 달인.', skill: { name: '파괴살: 나침', damageMultiplier: 5.5, cooldown: 5, description: '투기를 감지하여 치명타 확률을 높여 타격한다.' }, awakenSkill: { name: '청은난류광', damageMultiplier: 9.0, cooldown: 12, description: '백 발의 난타를 동시에 꽂아넣는다.' }, hiddenSkill: { name: '종식: 멸식', damageMultiplier: 18.0, cooldown: 28, description: '폭발적인 각력으로 돌진하여 적을 분쇄한다.' }, color: 'bg-pink-700' },
-        { id: 'sumiyoshi', name: '스미요시', style: BreathingStyle.SUN, role: Role.ATTACKER, baseHp: 200, baseAtk: 50, price: 5000, description: '요리이치의 검무를 눈에 새긴 카마도 가문의 조상.', skill: { name: '약속의 기억', damageMultiplier: 3.5, cooldown: 5, description: '요리이치와의 약속을 떠올리며 힘을 낸다.' }, awakenSkill: { name: '해의 호흡: 12형의 춤', damageMultiplier: 8.0, cooldown: 14, description: '밤새도록 멈추지 않고 춤을 춘다.' }, hiddenSkill: { name: '전승된 불꽃', damageMultiplier: 15.0, cooldown: 25, description: '후대에 전해질 해의 호흡의 정수.' }, color: 'bg-amber-700' },
+        { id: 'sumiyoshi', name: '스사마루', style: BreathingStyle.SUN, role: Role.ATTACKER, baseHp: 200, baseAtk: 50, price: 5000, description: '요리이치의 검무를 눈에 새긴 카마도 가문의 조상.', skill: { name: '약속의 기억', damageMultiplier: 3.5, cooldown: 5, description: '요리이치와의 약속을 떠올리며 힘을 낸다.' }, awakenSkill: { name: '해의 호흡: 12형의 춤', damageMultiplier: 8.0, cooldown: 14, description: '밤새도록 멈추지 않고 춤을 춘다.' }, hiddenSkill: { name: '전승된 불꽃', damageMultiplier: 15.0, cooldown: 25, description: '후대에 전해질 해의 호흡의 정수.' }, color: 'bg-amber-700' },
         { id: 'shinjuro', name: '렌고쿠 신쥬로', style: BreathingStyle.FLAME, role: Role.ATTACKER, baseHp: 420, baseAtk: 130, price: 4800, description: '전 염주이자 쿄쥬로의 아버지. 과거에는 열정적이었다.', skill: { name: '제4형: 성염의 파도', damageMultiplier: 4.5, cooldown: 6, description: '소용돌이치는 화염으로 방어와 공격을 동시에 한다.' }, awakenSkill: { name: '염주의 품격', damageMultiplier: 8.5, cooldown: 13, description: '녹슨 검술을 다시 불태워 강력한 일격을 날린다.' }, hiddenSkill: { name: '제9형: 연옥 (전성기)', damageMultiplier: 16.0, cooldown: 26, description: '전성기 시절의 파괴력을 담은 연옥.' }, color: 'bg-red-800' },
         { id: 'sabito_spirit', name: '사비토 (영혼)', style: BreathingStyle.WATER, role: Role.ATTACKER, baseHp: 220, baseAtk: 70, price: 4500, description: '가면이 깨진 진정한 모습의 사비토.', skill: { name: '쾌도난마', damageMultiplier: 4.0, cooldown: 5, description: '망설임 없는 검격으로 적을 벤다.' }, awakenSkill: { name: '진정한 용기', damageMultiplier: 7.5, cooldown: 11, description: '모두를 지키겠다는 일념으로 한계를 초월한다.' }, hiddenSkill: { name: '제10형: 생생유전', damageMultiplier: 13.0, cooldown: 24, description: '끊임없이 이어지는 물의 용.' }, color: 'bg-orange-400' },
         { id: 'zohakuten', name: '조하쿠텐 (상현 4)', style: BreathingStyle.WOOD, role: Role.ATTACKER, baseHp: 600, baseAtk: 220, price: 45000, description: '한텐구의 증오가 형상화된 최강의 분신.', skill: { name: '혈귀술: 무간업수', damageMultiplier: 4.5, cooldown: 6, description: '거대한 목룡을 소환하여 짓뭉갠다.' }, awakenSkill: { name: '광명뇌살', damageMultiplier: 9.0, cooldown: 14, description: '강력한 음파와 번개로 전장을 초토화한다.' }, hiddenSkill: { name: '압명공명', damageMultiplier: 18.0, cooldown: 28, description: '고막을 찢는 음파로 적을 내부에서 파괴한다.' }, color: 'bg-stone-800 text-yellow-500' },
-        { id: 'kanao_vermilion', name: '카나오 (주안)', style: BreathingStyle.FLOWER, role: Role.ATTACKER, baseHp: 550, baseAtk: 240, price: 3000, currency: 'LILY', lilyPrice: 1500, description: '피안주안을 사용하여 한계를 넘은 카나오.', skill: { name: '피안주안 개방', damageMultiplier: 5.0, cooldown: 5, description: '동체시력을 극한으로 올려 적의 급소를 찌른다.' }, awakenSkill: { name: '꽃의 호흡: 종의 형', damageMultiplier: 11.0, cooldown: 15, description: '모든 것을 느리게 보며 춤추듯 베어낸다.' }, hiddenSkill: { name: '피안주안: 실명', damageMultiplier: 22.0, cooldown: 30, description: '모든 시력을 희생하여 최후의 일격을 날린다.' }, color: 'bg-pink-300 text-red-600' },
+        { id: 'kanao_vermilion', name: '카나오 (종형)', style: BreathingStyle.FLOWER, role: Role.ATTACKER, baseHp: 550, baseAtk: 240, price: 3000, currency: 'LILY', lilyPrice: 1500, description: '피안주안을 사용하여 한계를 넘은 카나오.', skill: { name: '피안주안 개방', damageMultiplier: 5.0, cooldown: 5, description: '동체시력을 극한으로 올려 적의 급소를 찌른다.' }, awakenSkill: { name: '꽃의 호흡: 종의 형', damageMultiplier: 11.0, cooldown: 15, description: '모든 것을 느리게 보며 춤추듯 베어낸다.' }, hiddenSkill: { name: '피안주안: 실명', damageMultiplier: 22.0, cooldown: 30, description: '모든 시력을 희생하여 최후의 일격을 날린다.' }, color: 'bg-pink-300 text-red-600' },
         { id: 'gyutaro', name: '규타로 (상현 6)', style: BreathingStyle.BLOOD, role: Role.ATTACKER, baseHp: 500, baseAtk: 230, price: 35000, description: '다키의 오빠. 맹독의 낫을 휘두른다.', skill: { name: '혈귀술: 발호도량', damageMultiplier: 4.0, cooldown: 4, description: '자신의 피를 낫처럼 휘둘러 베어낸다.' }, awakenSkill: { name: '원참선회: 혈겸', damageMultiplier: 8.5, cooldown: 12, description: '피의 참격을 폭풍처럼 휘몰아치게 한다.' }, hiddenSkill: { name: '혈귀술: 맹독의 비', damageMultiplier: 16.0, cooldown: 25, description: '하늘에서 피의 낫을 비처럼 쏟아붓는다.' }, color: 'bg-lime-900 text-green-400' },
+        { id: 'makomo', name: '마코모 (속도)', style: BreathingStyle.WATER, role: Role.ATTACKER, baseHp: 180, baseAtk: 50, price: 4000, description: '사비토와 함께했던 소녀. 누구보다 빠르다.', skill: { name: '제9형: 수류 물보라', damageMultiplier: 3.0, cooldown: 3, description: '최소한의 동작으로 빠르게 적을 벤다.' }, awakenSkill: { name: '잔상 베기', damageMultiplier: 6.0, cooldown: 9, description: '속도를 높여 잔상을 남기며 공격한다.' }, hiddenSkill: { name: '제3형: 유유춤', damageMultiplier: 10.0, cooldown: 18, description: '흐르는 물처럼 부드럽게 적의 공격을 피하고 반격한다.' }, color: 'bg-cyan-400' },
       ];
 
       const ENEMY_TEMPLATES = [
@@ -361,7 +374,7 @@
           name: '도공 마을 방어팀',
           description: '탄지로, 네즈코, 미츠리, 무이치로, 겐야 중 3명 이상 시 방어력(체력) 30% 증가',
           condition: (ids) => {
-             const village = ['tanjiro', 'nezuko', 'mitsuri', 'muichiro', 'genya', 'tanjiro_sun'];
+             const village = ['tanjiro', 'nezuko', 'mitsuri', 'muichiro', 'genya', 'tanjiro_sun', 'dk_tanjiro_god'];
              return ids.filter(id => village.includes(id)).length >= 3;
           },
           apply: (id, stats) => {
@@ -974,7 +987,7 @@
             
             <div className="relative z-10 p-4 sm:p-6 flex justify-between items-start border-b border-slate-700 bg-slate-900/50 shrink-0">
               <div>
-                <h1 className="text-xl sm:text-3xl font-cinzel text-indigo-100 drop-shadow-lg font-bold">귀살대 본부 (Ver 20.0)</h1>
+                <h1 className="text-xl sm:text-3xl font-cinzel text-indigo-100 drop-shadow-lg font-bold">귀살대 본부 (Ver 21.0)</h1>
                 <p className="text-slate-400 text-xs sm:text-sm mt-1">
                   진행: <span className="text-yellow-400 font-bold">STAGE {player.stage}</span>
                   <span className="ml-2 bg-slate-800 px-2 py-0.5 rounded text-xs text-slate-400">{player.difficulty}</span>
@@ -1704,7 +1717,7 @@
                                   : 'bg-slate-700 text-slate-400 border border-slate-600 cursor-not-allowed'
                               }`}
                           >
-                              {isDead ? 'X' : isReady ? (isSupporter ? '치료' : '기술') : `${cooldownRemaining}s`}
+                              {isDead ? 'X' : isReady ? (isSupporter ? '치료/버프' : '기술') : `${cooldownRemaining}s`}
                               {!isReady && !isDead && (
                               <div 
                                   className="absolute inset-0 bg-black/20 origin-left"
@@ -2354,16 +2367,14 @@
                          return sl;
                      });
 
+                     // Allow heal if target exists OR if it's a global buff (multiplier 0)
                      if(target || skill.damageMultiplier === 0) { 
                          const isGlobal = skill.damageMultiplier === 0;
-                         const healAmt = finalDmg; // For global buffs, dmg is 0 so heal is 0, but effect triggers via logs mostly or hardcoded effects (which we simplified to just text effects here)
+                         const healAmt = finalDmg; 
                          
                          const healedSlayers = prev.ownedSlayers.map(sl => {
                              // Apply healing
                              if(partyIds.includes(sl.id) && (isGlobal || sl.id === target)) {
-                                 // Basic healing logic from "Damage" calc, but simplified for buffs
-                                 // If multiplier is 0, it's a buff, we assume 'heal' amt is negligible or handled by simple HP restore for now
-                                 // To make buffs real we need buff state, but for this text-based RPG clicker, visual feedback is key
                                  if (skill.damageMultiplier > 0) {
                                      return { ...sl, currentHp: Math.min(sl.maxHp, sl.currentHp + healAmt) };
                                  }
@@ -2376,6 +2387,9 @@
                          addLog(`${s.name}의 ${skill.name}! ${skill.damageMultiplier > 0 ? `아군 ${healAmt.toLocaleString()} 회복!` : '아군 강화!'}`);
                          return { ...prev, ownedSlayers: healedSlayers };
                      } else {
+                          // Cooldown still applies even if skill "misses" (optional game design, but keeping cooldown prevents spamming check)
+                          // In this case, let's say skill failed so NO cooldown.
+                          // But to satisfy "Supporter Cooldown" request, we should make them wait.
                           const cdSlayers = prev.ownedSlayers.map(sl => sl.id === s.id ? { ...sl, [readyAtKey]: Date.now() + (cooldown * 1000) } : sl);
                           addLog(`${s.name}의 ${skill.name}! (대상 없음)`);
                           return { ...prev, ownedSlayers: cdSlayers };
