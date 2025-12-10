@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>귀멸의 칼날: 귀살대 키우기 (Ver 21.0)</title>
+    <title>귀멸의 칼날: 귀살대 키우기 (Ver 22.0)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
@@ -95,7 +95,7 @@
     <script type="text/babel" data-type="module">
       import React, { useState, useEffect, useRef } from 'react';
       import { createRoot } from 'react-dom/client';
-      import { Swords, Home, ShoppingBag, Heart, Skull, Zap, ChevronRight, CheckCircle2, Circle, Users, ShieldAlert, Sparkles, Flame, Hammer, Mountain, Gem, Backpack, Flower, Target, BarChart2, Dumbbell, PlayCircle, PauseCircle, Crown, Shield, Droplets, BookOpen, Gift, Bird, Star, Scroll, FlaskConical, Hourglass, Utensils, Timer } from 'lucide-react';
+      import { Swords, Home, ShoppingBag, Heart, Skull, Zap, ChevronRight, CheckCircle2, Circle, Users, ShieldAlert, Sparkles, Flame, Hammer, Mountain, Gem, Backpack, Flower, Target, BarChart2, Dumbbell, PlayCircle, PauseCircle, Crown, Shield, Droplets, BookOpen, Gift, Bird, Star, Scroll, FlaskConical, Timer } from 'lucide-react';
 
       // --- CONSTANTS & DATA ---
       
@@ -132,18 +132,18 @@
         // REMAKE: TANJIRO (WATER)
         { id: 'tanjiro', name: '카마도 탄지로 (물)', style: BreathingStyle.WATER, role: Role.ATTACKER, baseHp: 180, baseAtk: 45, price: 0, description: '물의 호흡을 사용하는 귀살대 대원.', 
           skill: { name: '제2형: 물방아', damageMultiplier: 3.5, cooldown: 5, description: '몸을 회전시키며 물의 궤적을 그리는 참격.' }, 
-          awakenSkill: { name: '제 8형: 용소', damageMultiplier: 6.5, cooldown: 11, description: '회전할수록 위력이 강해지는 물의 용.' }, 
+          awakenSkill: { name: '제8형: 용소', damageMultiplier: 6.5, cooldown: 11, description: '회전할수록 위력이 강해지는 물의 용.' }, 
           hiddenSkill: { name: '제10형: 생생유전', damageMultiplier: 12.0, cooldown: 22, description: '위에서 아래로 폭포수처럼 내려찍는 일격.' },
           color: 'bg-blue-600' },
           
-        // NEW: TANJIRO (SUN/HINOKAMI) - PRICE REDUCED 10x
+        // TANJIRO (SUN/HINOKAMI)
         { id: 'tanjiro_sun', name: '히노카미카구라 탄지로', style: BreathingStyle.SUN, role: Role.ATTACKER, baseHp: 350, baseAtk: 110, price: 5000, currency: 'GOLD', description: '해의 호흡을 각성한 탄지로.', 
           skill: { name: '원무', damageMultiplier: 5.0, cooldown: 6, description: '강력한 화염의 참격.' }, 
           awakenSkill: { name: '벽라의 천', damageMultiplier: 8.5, cooldown: 13, description: '하늘을 태우는 화염의 고리.' }, 
           hiddenSkill: { name: '햇무리의 용', damageMultiplier: 18.0, cooldown: 28, description: '해의 호흡의 모든 형을 연결한 최강의 연격.' },
           color: 'bg-emerald-700 text-yellow-100 border border-red-400' },
 
-        // NEW: DEMON KING TANJIRO (SUN CONQUEROR) - STRONGER THAN MUZAN
+        // DEMON KING TANJIRO (SUN CONQUEROR)
         { id: 'dk_tanjiro_god', name: '탄지로 (태양 정복자)', style: BreathingStyle.SUN, role: Role.ATTACKER, baseHp: 5000, baseAtk: 2000, price: 50000, currency: 'LILY', lilyPrice: 50000, description: '무잔보다 강한, 태양을 극복한 오니의 왕.', 
           skill: { name: '태양의 포효', damageMultiplier: 10.0, cooldown: 4, description: '충격파만으로 적을 소멸시킨다.' }, 
           awakenSkill: { name: '신의 권능', damageMultiplier: 30.0, cooldown: 12, description: '오니와 인간을 초월한 힘.' }, 
@@ -164,12 +164,12 @@
         { id: 'inosuke', name: '하시비라 이노스케', style: BreathingStyle.BEAST, role: Role.ATTACKER, baseHp: 225, baseAtk: 35, price: 400, description: '저돌적인 야생의 전사.', 
           skill: { name: '제3의 이빨: 뜯어 발기기', damageMultiplier: 3.0, cooldown: 4, description: '쌍검으로 적의 목을 노린다.' }, 
           awakenSkill: { name: '제9의 이빨: 신・으스름 베기', damageMultiplier: 5.5, cooldown: 9, description: '관절을 빼서 리치를 늘려 공격한다.' }, 
-          hiddenSkill: { name: '공간식각', damageMultiplier: 10.0, cooldown: 22, description: '공기 중의 미세한 진동을 감지하여 적의 사각을 벤다.' },
+          hiddenSkill: { name: '공간식각: 급소 찌르기', damageMultiplier: 10.0, cooldown: 22, description: '공기 중의 미세한 진동을 감지하여 적의 사각을 벤다.' },
           color: 'bg-blue-400' },
         { id: 'nezuko', name: '카마도 네즈코', style: BreathingStyle.BLOOD, role: Role.ATTACKER, baseHp: 250, baseAtk: 55, price: 1500, description: '탄지로의 여동생. 혈귀술을 사용한다.', 
           skill: { name: '혈귀술: 폭혈', damageMultiplier: 4.0, cooldown: 5, description: '자신의 피를 불태워 적을 공격한다.' }, 
           awakenSkill: { name: '각성: 오니화', damageMultiplier: 6.5, cooldown: 15, description: '성인 형상으로 변하여 무자비하게 공격한다.' }, 
-          hiddenSkill: { name: '태양 극복', damageMultiplier: 13.0, cooldown: 25, description: '햇빛을 극복한 힘으로 적을 태워버린다.' },
+          hiddenSkill: { name: '태양 극복: 소각', damageMultiplier: 13.0, cooldown: 25, description: '햇빛을 극복한 힘으로 적을 태워버린다.' },
           color: 'bg-rose-500' },
         
         { id: 'kanae', name: '코쵸우 카나에', style: BreathingStyle.FLOWER, role: Role.ATTACKER, baseHp: 280, baseAtk: 80, price: 5000, description: '전 화주이자 시노부의 언니. 우아하고 강하다.', 
@@ -214,7 +214,13 @@
           hiddenSkill: { name: '백발의 지휘', damageMultiplier: 0, cooldown: 30, description: '냉철한 판단으로 아군의 모든 능력치를 30% 상승시킨다.' },
           color: 'bg-white text-purple-900 border border-purple-300' },
 
-        // EXISTING CHARACTERS
+        // NEW CHARACTERS (Ver 22.0)
+        { id: 'akaza_play', name: '아카자 (상현 3)', style: BreathingStyle.BLOOD, role: Role.ATTACKER, baseHp: 600, baseAtk: 200, price: 30000, currency: 'LILY', lilyPrice: 3000, description: '강함만을 추구하는 상현의 3. 파괴살을 사용한다.', skill: { name: '파괴살: 난식', damageMultiplier: 4.5, cooldown: 5, description: '눈에 보이지 않는 속도로 연타를 날린다.' }, awakenSkill: { name: '파괴살: 멸식', damageMultiplier: 9.0, cooldown: 12, description: '순간적으로 폭발적인 위력의 정권을 지른다.' }, hiddenSkill: { name: '파괴살: 종식', damageMultiplier: 20.0, cooldown: 25, description: '전장을 초토화시키는 파괴살의 최종 오의.' }, color: 'bg-pink-600 text-blue-900' },
+        { id: 'daki_play', name: '다키 (상현 6)', style: BreathingStyle.BLOOD, role: Role.ATTACKER, baseHp: 400, baseAtk: 150, price: 20000, description: '오비를 자유자재로 다루는 타락한 오이란.', skill: { name: '혈귀술: 여덟 겹 오비 베기', damageMultiplier: 4.0, cooldown: 6, description: '오비를 교차시켜 적을 벤다.' }, awakenSkill: { name: '오비 폭풍', damageMultiplier: 8.0, cooldown: 14, description: '오비로 거대한 폭풍을 일으켜 공격한다.' }, hiddenSkill: { name: '타락한 아름다움', damageMultiplier: 15.0, cooldown: 28, description: '매혹과 파괴를 동시에 행하는 광범위 공격.' }, color: 'bg-lime-500 text-pink-700' },
+        { id: 'ruka', name: '렌고쿠 루카', style: BreathingStyle.NONE, role: Role.SUPPORTER, baseHp: 150, baseAtk: 30, price: 6000, description: '쿄쥬로의 어머니. 강인한 정신력을 가졌다.', skill: { name: '어머니의 가르침', damageMultiplier: 0, cooldown: 10, description: '약한 자를 돕는 것이 강자의 의무. 아군 공격력 30% 증가.' }, awakenSkill: { name: '강인한 정신', damageMultiplier: 0, cooldown: 20, description: '아군 전체의 상태이상을 해제하고 쿨타임을 2초 줄인다.' }, hiddenSkill: { name: '불꽃의 유대', damageMultiplier: 0, cooldown: 40, description: '아군 전체를 완전 회복시키고 무적을 5초간 부여한다.' }, color: 'bg-orange-200 text-red-800' },
+        { id: 'uta', name: '우타', style: BreathingStyle.NONE, role: Role.SUPPORTER, baseHp: 120, baseAtk: 10, price: 5000, description: '요리이치의 아내. 소박하고 따뜻한 노래를 부른다.', skill: { name: '작은 노래', damageMultiplier: 0, cooldown: 5, description: '아군 1명을 지속 회복시킨다.' }, awakenSkill: { name: '평온한 일상', damageMultiplier: 0, cooldown: 15, description: '아군 전체에게 보호막을 씌운다.' }, hiddenSkill: { name: '영원한 사랑', damageMultiplier: 0, cooldown: 35, description: '요리이치와의 추억을 노래하여 아군 전체를 대폭 강화한다.' }, color: 'bg-rose-200 text-red-900' },
+
+        // EXISTING CHARACTERS - UPDATED WITH HIDDEN SKILLS
         { id: 'genya', name: '시나즈가와 겐야', style: BreathingStyle.NONE, role: Role.ATTACKER, baseHp: 270, baseAtk: 55, price: 800, description: '호흡을 쓸 수 없어 총과 혈귀 먹기를 사용한다.', skill: { name: '남만총 사격', damageMultiplier: 2.8, cooldown: 3, description: '총으로 견제하고 물어뜯어 회복한다.' }, awakenSkill: { name: '혈귀술: 무간업수', damageMultiplier: 5.0, cooldown: 10, description: '혈귀를 먹고 얻은 힘으로 나무 뿌리를 조종한다.' }, hiddenSkill: { name: '반점 개방: 총격 난무', damageMultiplier: 11.0, cooldown: 20, description: '반점의 힘으로 강화된 총탄을 퍼붓는다.' }, color: 'bg-slate-600' },
         { id: 'kanao', name: '츠유리 카나오', style: BreathingStyle.FLOWER, role: Role.ATTACKER, baseHp: 195, baseAtk: 60, price: 1200, description: '뛰어난 동체시력을 가진 츠구코.', skill: { name: '제4형: 홍화의', damageMultiplier: 3.5, cooldown: 5, description: '부드러운 곡선을 그리며 베어낸다.' }, awakenSkill: { name: '종의 형: 피안주안', damageMultiplier: 7.5, cooldown: 15, description: '실명할 위험을 감수하고 모든 움직임을 꿰뚫어본다.' }, hiddenSkill: { name: '꽃의 호흡: 만개', damageMultiplier: 14.0, cooldown: 28, description: '전장의 모든 꽃잎을 칼날로 바꾸어 벤다.' }, color: 'bg-pink-400' },
         { id: 'giyu', name: '토미오카 기유', style: BreathingStyle.WATER, role: Role.ATTACKER, baseHp: 300, baseAtk: 85, price: 2200, description: '냉철하고 침착한 물의 지주.', skill: { name: '제11형: 잔잔한 물결', damageMultiplier: 3.5, cooldown: 5, description: '모든 공격을 무효화하고 반격한다.' }, awakenSkill: { name: '제10형: 생생유전 (극)', damageMultiplier: 6.5, cooldown: 10, description: '극한까지 회전력을 높인 용의 일격.' }, hiddenSkill: { name: '반점: 파도 베기', damageMultiplier: 13.0, cooldown: 24, description: '반점 발현 상태에서 거대한 해일을 일으킨다.' }, color: 'bg-blue-800' },
@@ -256,7 +262,7 @@
         { id: 'wives', name: '우즈이의 아내들', style: BreathingStyle.SOUND, role: Role.ATTACKER, baseHp: 240, baseAtk: 65, price: 1100, description: '스마, 마키오, 히나츠루 3인조 쿠노이치.', skill: { name: '쿠나이 난사', damageMultiplier: 3.2, cooldown: 4, description: '독이 발린 쿠나이를 사방에서 던진다.' }, awakenSkill: { name: '지원 사격', damageMultiplier: 6.0, cooldown: 12, description: '대규모 화약과 무기로 적을 포위 공격한다.' }, hiddenSkill: { name: '잠입 성공', damageMultiplier: 10.0, cooldown: 25, description: '적의 약점을 완벽하게 파악하여 찌른다.' }, color: 'bg-pink-600' },
         { id: 'michikatsu', name: '츠기쿠니 미치카츠', style: BreathingStyle.MOON, role: Role.ATTACKER, baseHp: 650, baseAtk: 250, price: 18000, description: '요리이치의 형이자 달의 호흡 창시자. (인간 시절)', skill: { name: '달의 호흡: 제1형 암월·전궁', damageMultiplier: 6.0, cooldown: 6, description: '발도와 동시에 수많은 초승달 칼날을 날린다.' }, awakenSkill: { name: '달의 호흡 극한', damageMultiplier: 10.0, cooldown: 14, description: '인간의 몸으로 극한까지 끌어올린 달의 호흡.' }, hiddenSkill: { name: '달의 호흡 16형', damageMultiplier: 20.0, cooldown: 30, description: '하늘에서 달을 떨어뜨리는 듯한 거대한 참격.' }, color: 'bg-purple-900' },
         { id: 'hakuji', name: '하쿠지', style: BreathingStyle.NONE, role: Role.ATTACKER, baseHp: 500, baseAtk: 200, price: 15000, description: '오니가 되기 전의 아카자. 소류 무술의 달인.', skill: { name: '파괴살: 나침', damageMultiplier: 5.5, cooldown: 5, description: '투기를 감지하여 치명타 확률을 높여 타격한다.' }, awakenSkill: { name: '청은난류광', damageMultiplier: 9.0, cooldown: 12, description: '백 발의 난타를 동시에 꽂아넣는다.' }, hiddenSkill: { name: '종식: 멸식', damageMultiplier: 18.0, cooldown: 28, description: '폭발적인 각력으로 돌진하여 적을 분쇄한다.' }, color: 'bg-pink-700' },
-        { id: 'sumiyoshi', name: '스사마루', style: BreathingStyle.SUN, role: Role.ATTACKER, baseHp: 200, baseAtk: 50, price: 5000, description: '요리이치의 검무를 눈에 새긴 카마도 가문의 조상.', skill: { name: '약속의 기억', damageMultiplier: 3.5, cooldown: 5, description: '요리이치와의 약속을 떠올리며 힘을 낸다.' }, awakenSkill: { name: '해의 호흡: 12형의 춤', damageMultiplier: 8.0, cooldown: 14, description: '밤새도록 멈추지 않고 춤을 춘다.' }, hiddenSkill: { name: '전승된 불꽃', damageMultiplier: 15.0, cooldown: 25, description: '후대에 전해질 해의 호흡의 정수.' }, color: 'bg-amber-700' },
+        { id: 'sumiyoshi', name: '스미요시', style: BreathingStyle.SUN, role: Role.ATTACKER, baseHp: 200, baseAtk: 50, price: 5000, description: '요리이치의 검무를 눈에 새긴 카마도 가문의 조상.', skill: { name: '약속의 기억', damageMultiplier: 3.5, cooldown: 5, description: '요리이치와의 약속을 떠올리며 힘을 낸다.' }, awakenSkill: { name: '해의 호흡: 12형의 춤', damageMultiplier: 8.0, cooldown: 14, description: '밤새도록 멈추지 않고 춤을 춘다.' }, hiddenSkill: { name: '전승된 불꽃', damageMultiplier: 15.0, cooldown: 25, description: '후대에 전해질 해의 호흡의 정수.' }, color: 'bg-amber-700' },
         { id: 'shinjuro', name: '렌고쿠 신쥬로', style: BreathingStyle.FLAME, role: Role.ATTACKER, baseHp: 420, baseAtk: 130, price: 4800, description: '전 염주이자 쿄쥬로의 아버지. 과거에는 열정적이었다.', skill: { name: '제4형: 성염의 파도', damageMultiplier: 4.5, cooldown: 6, description: '소용돌이치는 화염으로 방어와 공격을 동시에 한다.' }, awakenSkill: { name: '염주의 품격', damageMultiplier: 8.5, cooldown: 13, description: '녹슨 검술을 다시 불태워 강력한 일격을 날린다.' }, hiddenSkill: { name: '제9형: 연옥 (전성기)', damageMultiplier: 16.0, cooldown: 26, description: '전성기 시절의 파괴력을 담은 연옥.' }, color: 'bg-red-800' },
         { id: 'sabito_spirit', name: '사비토 (영혼)', style: BreathingStyle.WATER, role: Role.ATTACKER, baseHp: 220, baseAtk: 70, price: 4500, description: '가면이 깨진 진정한 모습의 사비토.', skill: { name: '쾌도난마', damageMultiplier: 4.0, cooldown: 5, description: '망설임 없는 검격으로 적을 벤다.' }, awakenSkill: { name: '진정한 용기', damageMultiplier: 7.5, cooldown: 11, description: '모두를 지키겠다는 일념으로 한계를 초월한다.' }, hiddenSkill: { name: '제10형: 생생유전', damageMultiplier: 13.0, cooldown: 24, description: '끊임없이 이어지는 물의 용.' }, color: 'bg-orange-400' },
         { id: 'zohakuten', name: '조하쿠텐 (상현 4)', style: BreathingStyle.WOOD, role: Role.ATTACKER, baseHp: 600, baseAtk: 220, price: 45000, description: '한텐구의 증오가 형상화된 최강의 분신.', skill: { name: '혈귀술: 무간업수', damageMultiplier: 4.5, cooldown: 6, description: '거대한 목룡을 소환하여 짓뭉갠다.' }, awakenSkill: { name: '광명뇌살', damageMultiplier: 9.0, cooldown: 14, description: '강력한 음파와 번개로 전장을 초토화한다.' }, hiddenSkill: { name: '압명공명', damageMultiplier: 18.0, cooldown: 28, description: '고막을 찢는 음파로 적을 내부에서 파괴한다.' }, color: 'bg-stone-800 text-yellow-500' },
@@ -793,16 +799,16 @@
                                             )}
                                         </div>
 
-                                        <div className={`p-4 rounded border ${selectedSlayer.limitBreakLevel > 0 ? 'bg-yellow-900/20 border-yellow-500/30' : 'bg-slate-800 border-slate-700 opacity-50'}`}>
+                                        <div className={`p-4 rounded border ${selectedSlayer.limitBreakLevel > 0 || selectedSlayer.level >= 50 ? 'bg-yellow-900/20 border-yellow-500/30' : 'bg-slate-800 border-slate-700 opacity-50'}`}>
                                             <div className="flex justify-between mb-1 items-center">
                                                 <h3 className="font-bold text-yellow-300">오의 (Hidden Technique): {selectedSlayer.hiddenSkill?.name}</h3>
                                                 <span className="text-xs bg-yellow-900 text-yellow-200 px-2 py-0.5 rounded">쿨타임 {selectedSlayer.hiddenSkill?.cooldown}초</span>
                                             </div>
                                             <p className="text-sm text-slate-400 mb-3">{selectedSlayer.hiddenSkill?.description}</p>
-                                            {selectedSlayer.limitBreakLevel > 0 ? (
+                                            {selectedSlayer.limitBreakLevel > 0 || selectedSlayer.level >= 50 ? (
                                                 <div className="text-yellow-400 text-xs font-bold mt-2">사용 가능 (전투 중 3번째 버튼)</div>
                                             ) : (
-                                                <div className="text-yellow-500 text-xs font-bold mt-2">※ 초월 1단계 달성 시 해금</div>
+                                                <div className="text-yellow-500 text-xs font-bold mt-2">※ 레벨 50 혹은 초월 시 해금</div>
                                             )}
                                         </div>
                                     </div>
@@ -883,7 +889,6 @@
       };
 
       const FortuneView = ({ onClose, onDrawFortune }) => {
-          // ... (Same as before)
           const [step, setStep] = useState('SHAKE'); // SHAKE, REVEAL, RESULT
           const [result, setResult] = useState(null);
 
@@ -943,7 +948,6 @@
       // 1. Estate View (Hub)
       const EstateView = ({ 
         player, 
-        // ... props ...
         onStartPatrol,
         onStartInfinityCastle, 
         onStartRaid,
@@ -962,7 +966,6 @@
         onTrain,
         onOpenFortune
       }) => {
-        // ... (Same as existing EstateView logic) ...
         const [activeTab, setActiveTab] = useState('HQ'); 
         const needsHeal = player.ownedSlayers.some(s => s.currentHp < s.maxHp);
         const selectedCount = player.selectedSlayerIds.length;
@@ -987,13 +990,12 @@
             
             <div className="relative z-10 p-4 sm:p-6 flex justify-between items-start border-b border-slate-700 bg-slate-900/50 shrink-0">
               <div>
-                <h1 className="text-xl sm:text-3xl font-cinzel text-indigo-100 drop-shadow-lg font-bold">귀살대 본부 (Ver 21.0)</h1>
+                <h1 className="text-xl sm:text-3xl font-cinzel text-indigo-100 drop-shadow-lg font-bold">귀살대 본부 (Ver 22.0)</h1>
                 <p className="text-slate-400 text-xs sm:text-sm mt-1">
                   진행: <span className="text-yellow-400 font-bold">STAGE {player.stage}</span>
                   <span className="ml-2 bg-slate-800 px-2 py-0.5 rounded text-xs text-slate-400">{player.difficulty}</span>
                 </p>
               </div>
-              {/* ... (Header Stats) ... */}
               <div className="flex flex-col items-end gap-2">
                 <div className="flex gap-2">
                     <div className="bg-slate-800 px-3 py-1 rounded-full border border-yellow-600/50 flex items-center gap-2 text-yellow-400 shadow-lg">
@@ -1013,7 +1015,6 @@
             </div>
 
             <div className="relative z-10 flex gap-2 sm:gap-4 px-4 sm:px-6 pt-4 overflow-x-auto shrink-0 custom-scrollbar pb-2">
-                {/* ... (Tabs) ... */}
                 <button onClick={() => setActiveTab('HQ')} className={`whitespace-nowrap px-4 py-2 rounded-t-lg font-bold transition-all flex gap-2 ${activeTab === 'HQ' ? 'bg-slate-800 text-white border-t border-x border-slate-600' : 'bg-slate-900/50 text-slate-500 hover:text-slate-300'}`}>
                     <Home size={18} /> 본부
                 </button>
@@ -1037,7 +1038,6 @@
                   <div className="grid lg:grid-cols-2 gap-6 h-full overflow-y-auto pb-20 custom-scrollbar">
                     <div className="space-y-4">
                         <div className="bg-slate-900/50 rounded-xl p-6 border border-slate-700">
-                        {/* ... (HQ Content) ... */}
                         <div className="flex justify-between items-center mb-4 border-b border-slate-700 pb-2">
                             <h2 className="text-xl text-slate-200 font-bold">기본 임무</h2>
                             <div className="flex gap-1">
@@ -1089,7 +1089,6 @@
                         </div>
                         </div>
                         
-                        {/* ... (Synergy Box) ... */}
                         <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700">
                             <h2 className="text-sm text-slate-400 mb-2 font-bold flex items-center gap-2">
                                 <Users size={16} /> 활성화된 시너지 ({activeSynergies.length})
@@ -1108,7 +1107,6 @@
                         </div>
                     </div>
 
-                    {/* ... (Roster Box) ... */}
                     <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700 flex flex-col h-[400px] lg:h-auto overflow-hidden">
                         <div className="flex justify-between items-center mb-4 border-b border-slate-700 pb-2">
                              <h2 className="text-xl text-slate-200 font-bold">출전 대원</h2>
@@ -1156,7 +1154,6 @@
                   </div>
               )}
 
-               {/* ... (Other Tabs from previous code - kept identical) ... */}
                {activeTab === 'CAMPAIGN' && (
                   <div className="h-full overflow-y-auto custom-scrollbar p-2">
                        <h2 className="text-2xl font-cinzel text-slate-200 mb-6 text-center">특수 작전 구역</h2>
@@ -1207,7 +1204,6 @@
                   </div>
                )}
 
-               {/* ... (Training, Raid, Shop logic same as before) ... */}
                {activeTab === 'TRAINING' && (
                   <div className="h-full overflow-y-auto custom-scrollbar">
                       <div className="mb-6 text-center">
@@ -1308,14 +1304,12 @@
               
               {activeTab === 'SHOP' && (
                   <div className="h-full flex flex-col max-w-5xl mx-auto overflow-y-auto custom-scrollbar">
-                       {/* ... Same as previous shop logic ... */}
                        <div className="mb-6 text-center">
                           <h2 className="text-2xl font-cinzel text-blue-300 mb-1">피안화 교환소 & 상점</h2>
                           <p className="text-slate-400 text-sm">희귀한 재화를 교환하거나 소환을 진행할 수 있습니다.</p>
                       </div>
                       
                       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 pb-10">
-                          {/* ... (Shop Items: Potions, Boxes, etc.) ... */}
                           <div className="bg-slate-900/80 border border-slate-700 p-4 rounded-xl flex flex-col gap-2">
                               <div className="h-24 bg-red-900/30 rounded flex items-center justify-center mb-2 border border-red-500/20">
                                   <FlaskConical size={40} className="text-red-400" />
@@ -1424,6 +1418,26 @@
                                   <Flower size={14} /> 50
                               </button>
                           </div>
+                          <div className="bg-slate-900/80 border border-slate-700 p-4 rounded-xl flex flex-col gap-2">
+                              <div className="h-24 bg-blue-900/30 rounded flex items-center justify-center mb-2 border border-blue-500/20">
+                                  <Scroll size={40} className="text-blue-400" />
+                              </div>
+                              <h3 className="font-bold text-slate-200">호흡 숙련의 서</h3>
+                              <p className="text-xs text-slate-400 h-8">랜덤 대원의 호흡 숙련도를 500 올립니다.</p>
+                              <button onClick={() => onBuyShopItem('MASTERY_BOOK', 300)} className="mt-auto py-2 bg-blue-900/50 border border-blue-500/50 hover:bg-blue-800 text-blue-200 rounded text-sm font-bold flex items-center justify-center gap-1">
+                                  <Flower size={14} /> 300
+                              </button>
+                          </div>
+                          <div className="bg-slate-900/80 border border-slate-700 p-4 rounded-xl flex flex-col gap-2">
+                              <div className="h-24 bg-slate-800 rounded flex items-center justify-center mb-2 border border-slate-600">
+                                  <Swords size={40} className="text-red-400" />
+                              </div>
+                              <h3 className="font-bold text-slate-200">전설의 숫돌</h3>
+                              <p className="text-xs text-slate-400 h-8">랜덤 대원의 무기 레벨을 3 올립니다.</p>
+                              <button onClick={() => onBuyShopItem('WHETSTONE', 200)} className="mt-auto py-2 bg-blue-900/50 border border-blue-500/50 hover:bg-blue-800 text-blue-200 rounded text-sm font-bold flex items-center justify-center gap-1">
+                                  <Flower size={14} /> 200
+                              </button>
+                          </div>
                       </div>
                   </div>
               )}
@@ -1449,7 +1463,7 @@
         wave,
         onSkillUse, 
         onAwakenSkillUse,
-        onHiddenSkillUse, // New Prop
+        onHiddenSkillUse, 
         onRetreat,
         battleLog,
         battleStats
@@ -1481,7 +1495,7 @@
                     const isDead = s.currentHp <= 0;
                     if (isDead) return;
 
-                    const isLimitBroken = s.limitBreakLevel > 0;
+                    const isLimitBroken = (s.limitBreakLevel || 0) > 0 || s.level >= 50;
                     const isAwakened = s.level >= 10;
                     
                     // Auto logic: use strongest available
@@ -1541,7 +1555,7 @@
 
         return (
           <div className={`flex flex-col h-full bg-slate-950 relative overflow-hidden absolute inset-0 z-50 ${enemySkillEffect ? 'animate-shake' : ''}`}>
-             {/* ... (Visual effects, Header info same as before) ... */}
+             
             {enemySkillEffect && (
                 <div className="absolute inset-0 bg-red-900/30 z-40 pointer-events-none flex items-center justify-center">
                     <div className="text-4xl font-cinzel font-bold text-red-500 drop-shadow-[0_0_10px_rgba(255,0,0,1)]">
@@ -1575,7 +1589,6 @@
               ))}
             </div>
 
-            {/* ... (Top Bar) ... */}
             <div className="p-4 bg-black/60 backdrop-blur-md border-b border-red-900/30 flex justify-center items-center z-10 relative flex-col shrink-0">
               <div className="w-full max-w-2xl text-center">
                  {mode === 'CASTLE' && <div className="text-purple-400 font-bold mb-1">무한성 {floor}층</div>}
@@ -1612,7 +1625,6 @@
                 </button>
              </div>
 
-             {/* ... (Show Stats Modal - same) ... */}
              {showStats && (
                  <div className="absolute inset-0 z-40 bg-black/80 flex items-center justify-center p-4">
                      <div className="bg-slate-900 border border-slate-700 p-6 rounded-xl max-w-lg w-full">
@@ -1640,7 +1652,6 @@
                  </div>
              )}
 
-            {/* ... (Center Enemy) ... */}
             <div className="flex-1 flex flex-col items-center justify-center relative p-4 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900 to-black min-h-0">
               <div className={`transition-all duration-300 transform ${enemy.currentHp <= 0 && mode !== 'RAID' ? 'scale-90 opacity-0 blur-xl' : 'scale-100 opacity-100'}`}>
                 <div className={`w-48 h-48 md:w-64 md:h-64 rounded-full bg-black border-4 ${enemy.isBoss ? 'border-red-600 shadow-[0_0_50px_rgba(220,38,38,0.4)]' : 'border-slate-600'} flex items-center justify-center relative overflow-hidden`}>
@@ -1683,7 +1694,7 @@
                     const isHiddenReady = hiddenCooldownRemaining === 0;
 
                     const isAwakened = slayer.level >= 10; 
-                    const isLimitBroken = slayer.limitBreakLevel > 0;
+                    const isLimitBroken = (slayer.limitBreakLevel || 0) > 0 || slayer.level >= 50; // Access at Lv 50
                     const isSupporter = slayer.role === Role.SUPPORTER;
 
                     return (
@@ -1772,7 +1783,7 @@
                           </button>
                           ) : (
                               <div className="flex-1 flex items-center justify-center bg-black/20 rounded border border-slate-800">
-                                  <span className="text-[9px] text-slate-600">초월</span>
+                                  <span className="text-[9px] text-slate-600">Lv.50</span>
                               </div>
                           )}
                         </div>
@@ -1799,9 +1810,8 @@
         );
       };
 
-      // ... (RecruitView same as before) ...
+      // Recruit View
       const RecruitView = ({ player, onBuy, onBack }) => {
-          // ... (Recruit View Code) ...
           return (
             <div className="flex flex-col h-full bg-slate-900 absolute inset-0 z-50">
                 <div className="p-4 border-b border-slate-700 bg-slate-800 flex items-center justify-between shrink-0">
@@ -1866,7 +1876,6 @@
       };
 
       const App = () => {
-        // ... (App Logic) ...
         const [view, setView] = useState('ESTATE');
         const [battleMode, setBattleMode] = useState('NORMAL');
         const [castleFloor, setCastleFloor] = useState(1);
@@ -1875,11 +1884,10 @@
         const [battleStats, setBattleStats] = useState({});
         const [dollHp, setDollHp] = useState(10000);
         const [dollMaxHp, setDollMaxHp] = useState(10000);
-        
         const [fortune, setFortune] = useState(null); 
         const [activeBuffs, setActiveBuffs] = useState({}); 
 
-        // ... (loadSaveData logic) ...
+        // Load Save Data
         const loadSaveData = () => {
              const master = localStorage.getItem(MASTER_SAVE_KEY);
              const v1 = localStorage.getItem(V1_SAVE_KEY);
@@ -1932,19 +1940,17 @@
           localStorage.setItem(MASTER_SAVE_KEY, JSON.stringify(player));
         }, [player]);
 
-        // --- MIGRATION: Update Tanjiro to Water Breathing on Load ---
+        // MIGRATION: Update Tanjiro to Water Breathing on Load
         useEffect(() => {
              if (player.ownedSlayers.length > 0) {
                  const tanjiro = player.ownedSlayers.find(s => s.id === 'tanjiro');
                  if (tanjiro && tanjiro.style === BreathingStyle.SUN) {
-                     // Migrate Tanjiro to Water Breathing (Remake)
                      const newTanjiroTemplate = SLAYERS_DATA.find(s => s.id === 'tanjiro');
                      if (newTanjiroTemplate) {
                          setPlayer(prev => ({
                              ...prev,
                              ownedSlayers: prev.ownedSlayers.map(s => {
                                  if (s.id === 'tanjiro') {
-                                     // Preserve stats but update style/skills
                                      return {
                                          ...s,
                                          name: newTanjiroTemplate.name,
@@ -1963,7 +1969,7 @@
              }
         }, []);
 
-        // ... (Initial Tanjiro Logic) ...
+        // Initial Tanjiro Logic
         useEffect(() => {
           if (player.ownedSlayers.length === 0) {
             const tanjiro = SLAYERS_DATA.find(s => s.id === 'tanjiro');
@@ -2001,7 +2007,6 @@
             setPlayer(prev => ({ ...prev, difficulty: diff }));
         };
 
-        // ... (toggleSlayerSelection, resetCooldowns) ...
         const toggleSlayerSelection = (slayerId) => {
              setPlayer(prev => {
                 const isSelected = prev.selectedSlayerIds.includes(slayerId);
@@ -2022,7 +2027,6 @@
              return slayers.map(s => ({ ...s, skillReadyAt: 0, awakenSkillReadyAt: 0, hiddenSkillReadyAt: 0 }));
         };
         
-        // ... (startPatrol, startSelection, etc...) ...
         const startPatrol = () => {
           setBattleMode('NORMAL');
           setBattleStats({});
@@ -2109,7 +2113,6 @@
             setBattleLog([`최종 선별 ${wave}일차 밤이 되었습니다.`]);
         }
 
-        // ... (Other start functions same as before) ...
         const startInfinityCastle = () => {
             setBattleMode('CASTLE');
             setCastleFloor(1);
@@ -2340,7 +2343,7 @@
                     readyAtKey = 'skillReadyAt';
                 }
                 
-                if (!skill) return prev; // Should not happen
+                if (!skill) return prev; 
 
                 const cooldownReducePercent = ((prev.inventory.find(i=>i.id===s.equippedArtifactId)?.type === 'cooldown' ? prev.inventory.find(i=>i.id===s.equippedArtifactId).val : 0) + (player.trainingLevels?.reflex || 0) * 0.01);
                 const cooldown = Math.max(1, skill.cooldown * (1 - cooldownReducePercent));
@@ -2348,7 +2351,6 @@
                 s.mastery = (s.mastery || 0) + 1;
                 
                 const skillLevel = type === 'BASIC' ? (s.skillLevel || 1) : (type === 'AWAKEN' ? (s.awakenSkillLevel || 1) : 1);
-                // Scalar: Hidden skill doesn't have level yet, assume 1
                 const levelBonus = (type === 'HIDDEN' ? 0 : (skillLevel - 1)) * (type === 'AWAKEN' ? 0.2 : 0.1);
                 
                 const { finalDmg, isCrit, leechAmount, isHeal } = calculateDamage(s, skill.damageMultiplier + levelBonus);
@@ -2367,13 +2369,11 @@
                          return sl;
                      });
 
-                     // Allow heal if target exists OR if it's a global buff (multiplier 0)
                      if(target || skill.damageMultiplier === 0) { 
                          const isGlobal = skill.damageMultiplier === 0;
                          const healAmt = finalDmg; 
                          
                          const healedSlayers = prev.ownedSlayers.map(sl => {
-                             // Apply healing
                              if(partyIds.includes(sl.id) && (isGlobal || sl.id === target)) {
                                  if (skill.damageMultiplier > 0) {
                                      return { ...sl, currentHp: Math.min(sl.maxHp, sl.currentHp + healAmt) };
@@ -2387,16 +2387,12 @@
                          addLog(`${s.name}의 ${skill.name}! ${skill.damageMultiplier > 0 ? `아군 ${healAmt.toLocaleString()} 회복!` : '아군 강화!'}`);
                          return { ...prev, ownedSlayers: healedSlayers };
                      } else {
-                          // Cooldown still applies even if skill "misses" (optional game design, but keeping cooldown prevents spamming check)
-                          // In this case, let's say skill failed so NO cooldown.
-                          // But to satisfy "Supporter Cooldown" request, we should make them wait.
                           const cdSlayers = prev.ownedSlayers.map(sl => sl.id === s.id ? { ...sl, [readyAtKey]: Date.now() + (cooldown * 1000) } : sl);
                           addLog(`${s.name}의 ${skill.name}! (대상 없음)`);
                           return { ...prev, ownedSlayers: cdSlayers };
                      }
 
                 } else {
-                    // Attacker Logic
                     setEnemy(e => e ? { ...e, currentHp: Math.max(0, e.currentHp - finalDmg) } : null);
                     if (battleMode === 'RAID') setRaidScore(rs => rs + finalDmg);
                     
@@ -2428,7 +2424,6 @@
         const useAwakenSkill = (id) => onUseSkillLogic(id, 'AWAKEN');
         const useHiddenSkill = (id) => onUseSkillLogic(id, 'HIDDEN');
 
-        // ... (Upgrade logic same as before) ...
         const upgradeSlayer = (slayerId) => {
           setPlayer(prev => {
             const slayer = prev.ownedSlayers.find(s => s.id === slayerId);
@@ -2547,7 +2542,6 @@
             });
         }
         
-        // ... (Other actions same as before) ...
         const refineWeapon = (slayerId) => {
             setPlayer(prev => {
                 const s = prev.ownedSlayers.find(sl => sl.id === slayerId);
@@ -2631,7 +2625,6 @@
         };
         
         const buyShopItem = (type, cost) => {
-             // ... (Shop logic same as before) ...
              if (type === 'LEGENDARY_BOX') {
                  if(player.blueLily < cost) return;
                  const rand = Math.random();
@@ -2753,6 +2746,36 @@
                  setPlayer(prev => ({ ...prev, gold: prev.gold - cost, inventoryConsumables: { ...prev.inventoryConsumables, cdReset: (prev.inventoryConsumables?.cdReset || 0) + 1 } }));
                  alert('쿨타임 초기화 권 구매 완료! (전투 시작 시 자동 사용)');
              }
+             else if (type === 'MASTERY_BOOK') {
+                 if(player.blueLily < cost) return;
+                 if(player.ownedSlayers.length === 0) return;
+                 const targetIdx = Math.floor(Math.random() * player.ownedSlayers.length);
+                 const target = player.ownedSlayers[targetIdx];
+                 setPlayer(prev => ({
+                     ...prev,
+                     blueLily: prev.blueLily - cost,
+                     ownedSlayers: prev.ownedSlayers.map((s, idx) => {
+                         if(idx === targetIdx) return { ...s, mastery: (s.mastery || 0) + 500 };
+                         return s;
+                     })
+                 }));
+                 alert(`${target.name}의 호흡 숙련도가 500 올랐습니다!`);
+             }
+             else if (type === 'WHETSTONE') {
+                 if(player.blueLily < cost) return;
+                 if(player.ownedSlayers.length === 0) return;
+                 const targetIdx = Math.floor(Math.random() * player.ownedSlayers.length);
+                 const target = player.ownedSlayers[targetIdx];
+                 setPlayer(prev => ({
+                     ...prev,
+                     blueLily: prev.blueLily - cost,
+                     ownedSlayers: prev.ownedSlayers.map((s, idx) => {
+                         if(idx === targetIdx) return { ...s, weaponLevel: (s.weaponLevel || 0) + 3 };
+                         return s;
+                     })
+                 }));
+                 alert(`${target.name}의 일륜도 레벨이 3 올랐습니다!`);
+             }
         }
         
         const equipArtifact = (slayerId, artifactId) => {
@@ -2808,10 +2831,8 @@
             return;
           }
           
-          // Consume Potions/Buffs on Start
           if (!activeBuffs.initialized) {
                const newBuffs = { initialized: true };
-               
                if (player.inventoryConsumables?.atkBoost > 0) {
                    newBuffs.atkBoost = true;
                    setPlayer(p => ({...p, inventoryConsumables: {...p.inventoryConsumables, atkBoost: p.inventoryConsumables.atkBoost - 1}}));
@@ -2835,7 +2856,6 @@
                    }));
                    addLog("쿨타임 초기화 권 사용! 모든 스킬 준비 완료!");
                }
-
                setActiveBuffs(newBuffs);
           }
 
@@ -2871,8 +2891,6 @@
 
                setTimeout(() => {
                  setActiveBuffs({}); 
-                 
-                 // Revert HP buff removal logic kept for safety though eating game is gone, just in case legacy buffs exist
                  setPlayer(p => ({
                      ...p,
                      ownedSlayers: p.ownedSlayers.map(s => {
@@ -2965,7 +2983,7 @@
                         const awakeningMult = (s.markLevel || 0) > 0 ? (1 + (s.markLevel * 0.5)) : 1;
                         const selectionBonus = s.isFinalSelected ? 1.2 : 1.0;
                         const correctMaxHp = Math.floor(s.baseHp * (1 + s.level * 0.2) * rankMult * awakeningMult * selectionBonus);
-                        return { ...s, maxHp: correctMaxHp, currentHp: 0 }; // Dead
+                        return { ...s, maxHp: correctMaxHp, currentHp: 0 }; 
                      })
                  }));
                 setEnemy(null);
@@ -3092,7 +3110,6 @@
                    else {
                        setEnemy(null);
                        setView('ESTATE');
-                       // Revert buffs immediately if retreating
                        setPlayer(p => ({
                              ...p,
                              ownedSlayers: p.ownedSlayers.map(s => {
